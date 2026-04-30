@@ -3,7 +3,6 @@ import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import React, { useMemo, useState } from "react";
 import {
   Alert,
-  FlatList,
   KeyboardAvoidingView,
   Modal,
   Platform,
@@ -18,6 +17,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useColors } from "@/hooks/useColors";
 import { useFamily, type Chore } from "@/context/FamilyContext";
+import { useUser } from "@/context/UserContext";
 import { ChoreCard } from "@/components/ChoreCard";
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -38,6 +38,7 @@ function getTodayLabel(): string {
 export default function HomeScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
+  const { profile } = useUser();
   const { members, chores, addChore, toggleChore, deleteChore } = useFamily();
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [newChoreTitle, setNewChoreTitle] = useState("");
@@ -62,10 +63,17 @@ export default function HomeScreen() {
   };
 
   const handleDeleteChore = (id: string) => {
-    Alert.alert("Delete Chore", "Remove this chore?", [
-      { text: "Cancel", style: "cancel" },
-      { text: "Delete", style: "destructive", onPress: () => deleteChore(id) },
-    ]);
+    if (Platform.OS === "web") {
+      if (typeof window !== "undefined" && window.confirm("Remove this chore?")) {
+        deleteChore(id);
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      }
+    } else {
+      Alert.alert("Delete Chore", "Remove this chore?", [
+        { text: "Cancel", style: "cancel" },
+        { text: "Delete", style: "destructive", onPress: () => { deleteChore(id); Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium); } },
+      ]);
+    }
   };
 
   const topPad = Platform.OS === "web" ? 67 : insets.top;
@@ -80,7 +88,9 @@ export default function HomeScreen() {
         {/* Header */}
         <View style={styles.headerRow}>
           <View>
-            <Text style={[styles.greeting, { color: colors.mutedForeground }]}>{getGreeting()}</Text>
+            <Text style={[styles.greeting, { color: colors.mutedForeground }]}>
+              {getGreeting()}{profile?.name ? `, ${profile.name}` : ""}
+            </Text>
             <Text style={[styles.dateLabel, { color: colors.foreground }]}>{getTodayLabel()}</Text>
           </View>
           <TouchableOpacity
