@@ -5,18 +5,27 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
+  MutationFunction,
   QueryFunction,
   QueryKey,
+  UseMutationOptions,
+  UseMutationResult,
   UseQueryOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
 
-import type { HealthStatus } from "./api.schemas";
+import type {
+  ErrorResponse,
+  FirstAidRequest,
+  HealthStatus,
+  MealPlanRequest,
+  MealPlanResponse,
+} from "./api.schemas";
 
 import { customFetch } from "../custom-fetch";
-import type { ErrorType } from "../custom-fetch";
+import type { ErrorType, BodyType } from "../custom-fetch";
 
 type AwaitedInput<T> = PromiseLike<T> | T;
 
@@ -99,3 +108,177 @@ export function useHealthCheck<
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+/**
+ * Generate Indian meal suggestions based on family preferences, inventory, and nutritional needs
+ * @summary Generate AI meal plan
+ */
+export const getGenerateMealPlanUrl = () => {
+  return `/api/ai/meals`;
+};
+
+export const generateMealPlan = async (
+  mealPlanRequest: MealPlanRequest,
+  options?: RequestInit,
+): Promise<MealPlanResponse> => {
+  return customFetch<MealPlanResponse>(getGenerateMealPlanUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(mealPlanRequest),
+  });
+};
+
+export const getGenerateMealPlanMutationOptions = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof generateMealPlan>>,
+    TError,
+    { data: BodyType<MealPlanRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof generateMealPlan>>,
+  TError,
+  { data: BodyType<MealPlanRequest> },
+  TContext
+> => {
+  const mutationKey = ["generateMealPlan"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof generateMealPlan>>,
+    { data: BodyType<MealPlanRequest> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return generateMealPlan(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type GenerateMealPlanMutationResult = NonNullable<
+  Awaited<ReturnType<typeof generateMealPlan>>
+>;
+export type GenerateMealPlanMutationBody = BodyType<MealPlanRequest>;
+export type GenerateMealPlanMutationError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Generate AI meal plan
+ */
+export const useGenerateMealPlan = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof generateMealPlan>>,
+    TError,
+    { data: BodyType<MealPlanRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof generateMealPlan>>,
+  TError,
+  { data: BodyType<MealPlanRequest> },
+  TContext
+> => {
+  return useMutation(getGenerateMealPlanMutationOptions(options));
+};
+
+/**
+ * Stream AI-powered first aid guidance for children
+ * @summary Get first aid guidance
+ */
+export const getGetFirstAidGuidanceUrl = () => {
+  return `/api/ai/firstaid`;
+};
+
+export const getFirstAidGuidance = async (
+  firstAidRequest: FirstAidRequest,
+  options?: RequestInit,
+): Promise<string> => {
+  return customFetch<string>(getGetFirstAidGuidanceUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(firstAidRequest),
+  });
+};
+
+export const getGetFirstAidGuidanceMutationOptions = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof getFirstAidGuidance>>,
+    TError,
+    { data: BodyType<FirstAidRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof getFirstAidGuidance>>,
+  TError,
+  { data: BodyType<FirstAidRequest> },
+  TContext
+> => {
+  const mutationKey = ["getFirstAidGuidance"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof getFirstAidGuidance>>,
+    { data: BodyType<FirstAidRequest> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return getFirstAidGuidance(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type GetFirstAidGuidanceMutationResult = NonNullable<
+  Awaited<ReturnType<typeof getFirstAidGuidance>>
+>;
+export type GetFirstAidGuidanceMutationBody = BodyType<FirstAidRequest>;
+export type GetFirstAidGuidanceMutationError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Get first aid guidance
+ */
+export const useGetFirstAidGuidance = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof getFirstAidGuidance>>,
+    TError,
+    { data: BodyType<FirstAidRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof getFirstAidGuidance>>,
+  TError,
+  { data: BodyType<FirstAidRequest> },
+  TContext
+> => {
+  return useMutation(getGetFirstAidGuidanceMutationOptions(options));
+};

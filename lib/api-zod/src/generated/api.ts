@@ -14,3 +14,56 @@ import * as zod from "zod";
 export const HealthCheckResponse = zod.object({
   status: zod.string(),
 });
+
+/**
+ * Generate Indian meal suggestions based on family preferences, inventory, and nutritional needs
+ * @summary Generate AI meal plan
+ */
+export const GenerateMealPlanBody = zod.object({
+  preferences: zod
+    .array(zod.string())
+    .describe("Dietary preferences (vegetarian, vegan, no onion-garlic, etc.)"),
+  inventory: zod.array(zod.string()).describe("Available ingredients"),
+  familySize: zod.number().describe("Number of family members"),
+  nutritionalGoals: zod
+    .array(zod.string())
+    .optional()
+    .describe("Nutritional goals (high protein, low oil, etc.)"),
+  mealType: zod
+    .enum(["breakfast", "lunch", "dinner", "snack", "weekly"])
+    .describe("Type of meal to plan"),
+});
+
+export const GenerateMealPlanResponse = zod.object({
+  meals: zod.array(
+    zod.object({
+      name: zod.string(),
+      nameHindi: zod.string().optional(),
+      description: zod.string(),
+      ingredients: zod.array(zod.string()),
+      prepTime: zod.string(),
+      nutritionHighlights: zod.string().optional(),
+      servings: zod.number().optional(),
+    }),
+  ),
+  nutritionSummary: zod.string().optional(),
+  tips: zod.string().optional(),
+});
+
+/**
+ * Stream AI-powered first aid guidance for children
+ * @summary Get first aid guidance
+ */
+export const GetFirstAidGuidanceBody = zod.object({
+  condition: zod.string().describe("The medical condition or symptom"),
+  childAge: zod
+    .string()
+    .describe('Age of the child (e.g., \"6 months\", \"3 years\")'),
+  severity: zod
+    .enum(["mild", "moderate", "severe"])
+    .describe("Perceived severity"),
+  additionalInfo: zod
+    .string()
+    .optional()
+    .describe("Additional context about the situation"),
+});

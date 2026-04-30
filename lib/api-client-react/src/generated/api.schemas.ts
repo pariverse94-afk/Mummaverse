@@ -8,3 +8,73 @@
 export interface HealthStatus {
   status: string;
 }
+
+/**
+ * Type of meal to plan
+ */
+export type MealPlanRequestMealType =
+  (typeof MealPlanRequestMealType)[keyof typeof MealPlanRequestMealType];
+
+export const MealPlanRequestMealType = {
+  breakfast: "breakfast",
+  lunch: "lunch",
+  dinner: "dinner",
+  snack: "snack",
+  weekly: "weekly",
+} as const;
+
+export interface MealPlanRequest {
+  /** Dietary preferences (vegetarian, vegan, no onion-garlic, etc.) */
+  preferences: string[];
+  /** Available ingredients */
+  inventory: string[];
+  /** Number of family members */
+  familySize: number;
+  /** Nutritional goals (high protein, low oil, etc.) */
+  nutritionalGoals?: string[];
+  /** Type of meal to plan */
+  mealType: MealPlanRequestMealType;
+}
+
+export interface MealSuggestion {
+  name: string;
+  nameHindi?: string;
+  description: string;
+  ingredients: string[];
+  prepTime: string;
+  nutritionHighlights?: string;
+  servings?: number;
+}
+
+export interface MealPlanResponse {
+  meals: MealSuggestion[];
+  nutritionSummary?: string;
+  tips?: string;
+}
+
+/**
+ * Perceived severity
+ */
+export type FirstAidRequestSeverity =
+  (typeof FirstAidRequestSeverity)[keyof typeof FirstAidRequestSeverity];
+
+export const FirstAidRequestSeverity = {
+  mild: "mild",
+  moderate: "moderate",
+  severe: "severe",
+} as const;
+
+export interface FirstAidRequest {
+  /** The medical condition or symptom */
+  condition: string;
+  /** Age of the child (e.g., "6 months", "3 years") */
+  childAge: string;
+  /** Perceived severity */
+  severity: FirstAidRequestSeverity;
+  /** Additional context about the situation */
+  additionalInfo?: string;
+}
+
+export interface ErrorResponse {
+  error: string;
+}

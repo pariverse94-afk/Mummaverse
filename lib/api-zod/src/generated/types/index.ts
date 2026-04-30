@@ -6,4 +6,11 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from "./errorResponse";
+export * from "./firstAidRequest";
+export * from "./firstAidRequestSeverity";
 export * from "./healthStatus";
+export * from "./mealPlanRequest";
+export * from "./mealPlanRequestMealType";
+export * from "./mealPlanResponse";
+export * from "./mealSuggestion";

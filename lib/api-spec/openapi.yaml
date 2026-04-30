@@ -10,6 +10,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: ai
+    description: AI-powered features
 paths:
   /healthz:
     get:
@@ -24,6 +26,56 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /ai/meals:
+    post:
+      operationId: generateMealPlan
+      tags: [ai]
+      summary: Generate AI meal plan
+      description: Generate Indian meal suggestions based on family preferences, inventory, and nutritional needs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MealPlanRequest"
+      responses:
+        "200":
+          description: Meal plan generated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MealPlanResponse"
+        "500":
+          description: AI error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /ai/firstaid:
+    post:
+      operationId: getFirstAidGuidance
+      tags: [ai]
+      summary: Get first aid guidance
+      description: Stream AI-powered first aid guidance for children
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FirstAidRequest"
+      responses:
+        "200":
+          description: First aid guidance (streamed as SSE)
+          content:
+            text/event-stream:
+              schema:
+                type: string
+        "500":
+          description: AI error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +85,97 @@ components:
           type: string
       required:
         - status
-
+    MealPlanRequest:
+      type: object
+      properties:
+        preferences:
+          type: array
+          items:
+            type: string
+          description: Dietary preferences (vegetarian, vegan, no onion-garlic, etc.)
+        inventory:
+          type: array
+          items:
+            type: string
+          description: Available ingredients
+        familySize:
+          type: integer
+          description: Number of family members
+        nutritionalGoals:
+          type: array
+          items:
+            type: string
+          description: Nutritional goals (high protein, low oil, etc.)
+        mealType:
+          type: string
+          enum: [breakfast, lunch, dinner, snack, weekly]
+          description: Type of meal to plan
+      required:
+        - preferences
+        - inventory
+        - familySize
+        - mealType
+    MealPlanResponse:
+      type: object
+      properties:
+        meals:
+          type: array
+          items:
+            $ref: "#/components/schemas/MealSuggestion"
+        nutritionSummary:
+          type: string
+        tips:
+          type: string
+      required:
+        - meals
+    MealSuggestion:
+      type: object
+      properties:
+        name:
+          type: string
+        nameHindi:
+          type: string
+        description:
+          type: string
+        ingredients:
+          type: array
+          items:
+            type: string
+        prepTime:
+          type: string
+        nutritionHighlights:
+          type: string
+        servings:
+          type: integer
+      required:
+        - name
+        - description
+        - ingredients
+        - prepTime
+    FirstAidRequest:
+      type: object
+      properties:
+        condition:
+          type: string
+          description: The medical condition or symptom
+        childAge:
+          type: string
+          description: Age of the child (e.g., "6 months", "3 years")
+        severity:
+          type: string
+          enum: [mild, moderate, severe]
+          description: Perceived severity
+        additionalInfo:
+          type: string
+          description: Additional context about the situation
+      required:
+        - condition
+        - childAge
+        - severity
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
