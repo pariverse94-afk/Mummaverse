@@ -93,14 +93,24 @@ alter table post_saves        enable row level security;
 alter table inventory_items   enable row level security;
 
 -- Allow anon key full access (since we're using user_id from the app, not Supabase Auth)
-create policy if not exists "anon_all_parivaar_users"  on parivaar_users  for all using (true) with check (true);
-create policy if not exists "anon_all_family_members"  on family_members  for all using (true) with check (true);
-create policy if not exists "anon_all_chores"          on chores          for all using (true) with check (true);
-create policy if not exists "anon_all_meal_plans"      on meal_plans      for all using (true) with check (true);
-create policy if not exists "anon_all_community_posts" on community_posts for all using (true) with check (true);
-create policy if not exists "anon_all_post_likes"      on post_likes      for all using (true) with check (true);
-create policy if not exists "anon_all_post_saves"      on post_saves      for all using (true) with check (true);
-create policy if not exists "anon_all_inventory_items" on inventory_items for all using (true) with check (true);
+-- Drop first so this script is safe to re-run
+drop policy if exists "anon_all_parivaar_users"  on parivaar_users;
+drop policy if exists "anon_all_family_members"  on family_members;
+drop policy if exists "anon_all_chores"          on chores;
+drop policy if exists "anon_all_meal_plans"      on meal_plans;
+drop policy if exists "anon_all_community_posts" on community_posts;
+drop policy if exists "anon_all_post_likes"      on post_likes;
+drop policy if exists "anon_all_post_saves"      on post_saves;
+drop policy if exists "anon_all_inventory_items" on inventory_items;
+
+create policy "anon_all_parivaar_users"  on parivaar_users  for all using (true) with check (true);
+create policy "anon_all_family_members"  on family_members  for all using (true) with check (true);
+create policy "anon_all_chores"          on chores          for all using (true) with check (true);
+create policy "anon_all_meal_plans"      on meal_plans      for all using (true) with check (true);
+create policy "anon_all_community_posts" on community_posts for all using (true) with check (true);
+create policy "anon_all_post_likes"      on post_likes      for all using (true) with check (true);
+create policy "anon_all_post_saves"      on post_saves      for all using (true) with check (true);
+create policy "anon_all_inventory_items" on inventory_items for all using (true) with check (true);
 
 -- ─── Seed community posts ─────────────────────────────────────────────────────
 insert into community_posts (author_name, author_color, content, category, likes, is_seed)
