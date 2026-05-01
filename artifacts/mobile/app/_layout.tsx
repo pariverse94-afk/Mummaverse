@@ -16,8 +16,8 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { UserProvider, useUser } from "@/context/UserContext";
-import { FamilyProvider } from "@/context/FamilyContext";
-import { MealProvider } from "@/context/MealContext";
+import { FamilyProvider, useFamily } from "@/context/FamilyContext";
+import { MealProvider, useMeals } from "@/context/MealContext";
 import { CommunityProvider } from "@/context/CommunityContext";
 
 if (process.env.EXPO_PUBLIC_DOMAIN) {
@@ -30,11 +30,16 @@ const queryClient = new QueryClient();
 
 function NavigationGuard({ children }: { children: React.ReactNode }) {
   const { profile, isLoaded } = useUser();
+  const { setUserId: setFamilyUserId } = useFamily();
+  const { setUserId: setMealUserId } = useMeals();
 
   useEffect(() => {
     if (!isLoaded) return;
     if (!profile) {
       router.replace("/onboarding");
+    } else {
+      setFamilyUserId(profile.id);
+      setMealUserId(profile.id);
     }
   }, [isLoaded, profile]);
 

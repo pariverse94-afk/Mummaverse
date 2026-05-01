@@ -28,10 +28,10 @@ export default function OnboardingScreen() {
   const handleGetStarted = async () => {
     if (!yourName.trim()) return;
     setLoading(true);
-    await saveProfile({
-      name: yourName.trim(),
-      familyName: familyName.trim() || `${yourName.trim()}'s Family`,
-    });
+    await saveProfile(
+      yourName.trim(),
+      familyName.trim() || `${yourName.trim()}'s Family`,
+    );
     setLoading(false);
     router.replace("/(tabs)");
   };
