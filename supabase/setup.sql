@@ -115,10 +115,10 @@ create policy "anon_all_inventory_items" on inventory_items for all using (true)
 -- ─── Seed community posts ─────────────────────────────────────────────────────
 insert into community_posts (author_name, author_color, content, category, likes, is_seed)
 select * from (values
-  ('Sunita Sharma','#E07B39','My 3-year-old has been refusing vegetables for weeks. Finally cracked the code — blend spinach into his dal! He has no idea and finishes everything. Game changer for picky eaters.','parenting',24,true),
+  ('Sunita Sharma','#E07B39','My 3-year-old has been refusing vegetables for weeks. Finally cracked the code - blend spinach into his dal! He has no idea and finishes everything. Game changer for picky eaters.','parenting',24,true),
   ('Kavitha R.','#2D6A4F','Sharing my protein-rich tiffin box recipe for school kids: moong dal chilla with mint chutney, boiled egg, mixed fruit. My son''s teacher said he''s more focused in afternoon class now!','recipe',41,true),
-  ('Ananya M.','#7B5EA7','Paediatrician confirmed — screen time guidelines for under-2s: zero. For 2-5: max 1 hour/day of quality content. Our new rule: no screens during meals and 1 hour before bed. Already seeing calmer bedtimes!','health',56,true),
-  ('Divya Nair','#2E86AB','Anyone else dealing with separation anxiety when dropping off at daycare? What worked for us: a special goodbye ritual — one hug, one high-five, one wave from the window. Consistency was key. Took 2 weeks but now she walks in happily.','parenting',38,true),
+  ('Ananya M.','#7B5EA7','Paediatrician confirmed - screen time guidelines for under-2s: zero. For 2-5: max 1 hour/day of quality content. Our new rule: no screens during meals and 1 hour before bed. Already seeing calmer bedtimes!','health',56,true),
+  ('Divya Nair','#2E86AB','Anyone else dealing with separation anxiety when dropping off at daycare? What worked for us: a special goodbye ritual - one hug, one high-five, one wave from the window. Consistency was key. Took 2 weeks but now she walks in happily.','parenting',38,true),
   ('Meena Kulkarni','#D45087','Quick weeknight recipe: Palak paneer in 20 minutes. Blanch spinach, blend with 1 onion + 2 tomatoes. Saute with ghee, cumin, garam masala. Add paneer cubes. Perfect with roti. Kids love the color!','recipe',67,true),
   ('Lakshmi P.','#E8A838','Varicella vaccination reminder: if your child hasn''t had chickenpox or the vaccine, the second dose is due between 4-6 years. Our local PHC gives it free under Universal Immunization. Don''t skip boosters!','health',29,true)
 ) as v(author_name, author_color, content, category, likes, is_seed)
