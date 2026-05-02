@@ -46,8 +46,8 @@ export default function OnboardingScreen() {
               <Text style={styles.logoEmoji}>🏠</Text>
             </View>
             <View style={styles.logoTextArea}>
-              <Text style={[styles.appName, { color: colors.foreground }]}>Parivaar</Text>
-              <Text style={[styles.appNameHindi, { color: colors.primary }]}>परिवार</Text>
+              <Text style={[styles.appName, { color: colors.foreground }]}>Pariverse</Text>
+              <Text style={[styles.appNameHindi, { color: colors.primary }]}>परिवर्स</Text>
             </View>
           </View>
 
@@ -108,7 +108,7 @@ export default function OnboardingScreen() {
 
         <Text style={[styles.profileTitle, { color: colors.foreground }]}>Tell us about yourself</Text>
         <Text style={[styles.profileSubtitle, { color: colors.mutedForeground }]}>
-          We'll personalise your Parivaar experience
+          We'll personalise your Pariverse experience
         </Text>
 
         <Text style={[styles.inputLabel, { color: colors.foreground }]}>Your name</Text>
@@ -141,7 +141,7 @@ export default function OnboardingScreen() {
           disabled={!yourName.trim() || loading}
           testID="profile-continue-btn"
         >
-          <Text style={styles.continueBtnText}>Enter Parivaar</Text>
+          <Text style={styles.continueBtnText}>Enter Pariverse</Text>
           <Feather name="arrow-right" size={18} color="#fff" />
         </TouchableOpacity>
 
