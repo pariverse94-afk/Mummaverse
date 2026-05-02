@@ -29,19 +29,22 @@ SplashScreen.preventAutoHideAsync();
 const queryClient = new QueryClient();
 
 function NavigationGuard({ children }: { children: React.ReactNode }) {
-  const { profile, isLoaded } = useUser();
+  const { session, profile, isLoaded } = useUser();
   const { setUserId: setFamilyUserId } = useFamily();
   const { setUserId: setMealUserId } = useMeals();
 
   useEffect(() => {
     if (!isLoaded) return;
-    if (!profile) {
+
+    if (!session) {
+      router.replace("/login");
+    } else if (!profile) {
       router.replace("/onboarding");
     } else {
       setFamilyUserId(profile.id);
       setMealUserId(profile.id);
     }
-  }, [isLoaded, profile]);
+  }, [isLoaded, session, profile]);
 
   return <>{children}</>;
 }
@@ -49,6 +52,7 @@ function NavigationGuard({ children }: { children: React.ReactNode }) {
 function RootLayoutNav() {
   return (
     <Stack>
+      <Stack.Screen name="login" options={{ headerShown: false, animation: "none" }} />
       <Stack.Screen name="onboarding" options={{ headerShown: false, animation: "none" }} />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen

@@ -146,7 +146,7 @@ export default function OnboardingScreen() {
         </TouchableOpacity>
 
         <Text style={[styles.privacyNote, { color: colors.mutedForeground }]}>
-          Your data is stored locally on your device
+          Your data is securely stored and synced via Supabase
         </Text>
       </ScrollView>
     </KeyboardAvoidingView>

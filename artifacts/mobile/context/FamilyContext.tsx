@@ -7,6 +7,8 @@ export interface FamilyMember {
   name: string;
   role: "parent" | "child";
   color: string;
+  invitedEmail?: string;
+  isOnApp?: boolean;
 }
 
 export interface Chore {
@@ -24,8 +26,9 @@ interface FamilyContextValue {
   chores: Chore[];
   userId: string | null;
   setUserId: (id: string) => void;
-  addMember: (name: string, role: FamilyMember["role"]) => Promise<void>;
+  addMember: (name: string, role: FamilyMember["role"], invitedEmail?: string) => Promise<void>;
   deleteMember: (id: string) => Promise<void>;
+  updateMemberEmail: (memberId: string, email: string) => Promise<void>;
   addChore: (chore: Omit<Chore, "id" | "createdAt" | "completed">) => Promise<void>;
   toggleChore: (id: string) => Promise<void>;
   deleteChore: (id: string) => Promise<void>;
@@ -67,7 +70,6 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
   const [userId, setUserIdState] = useState<string | null>(null);
   const [loaded, setLoaded] = useState(false);
 
-  // Load from AsyncStorage first (fast)
   useEffect(() => {
     async function load() {
       try {
@@ -83,7 +85,6 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
     load();
   }, []);
 
-  // When userId is set, sync from Supabase
   useEffect(() => {
     if (!userId) return;
     syncFromSupabase(userId);
@@ -97,21 +98,37 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
       ]);
 
       if (membersData && membersData.length > 0) {
-        const mapped: FamilyMember[] = membersData.map((m) => ({
+        // Batch-check which invited emails are registered on the app
+        const invitedEmails = (membersData as any[])
+          .map((m) => m.invited_email)
+          .filter(Boolean) as string[];
+
+        const onAppEmails = new Set<string>();
+        if (invitedEmails.length > 0) {
+          const { data: users } = await (supabase.from("parivaar_users") as any)
+            .select("email")
+            .in("email", invitedEmails);
+          if (users) {
+            (users as any[]).forEach((u) => { if (u.email) onAppEmails.add(u.email); });
+          }
+        }
+
+        const mapped: FamilyMember[] = (membersData as any[]).map((m) => ({
           id: m.id,
           name: m.name,
           role: m.role as FamilyMember["role"],
           color: m.color,
+          invitedEmail: m.invited_email ?? undefined,
+          isOnApp: m.invited_email ? onAppEmails.has(m.invited_email) : undefined,
         }));
         setMembers(mapped);
         AsyncStorage.setItem(STORAGE_KEYS.members, JSON.stringify(mapped));
       } else if (membersData && membersData.length === 0) {
-        // First time — push defaults to Supabase
         await pushDefaultsToSupabase(uid);
       }
 
       if (choresData && choresData.length > 0) {
-        const mapped: Chore[] = choresData.map((c) => ({
+        const mapped: Chore[] = (choresData as any[]).map((c) => ({
           id: c.id,
           title: c.title,
           assignedTo: c.assigned_to,
@@ -129,18 +146,21 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
   async function pushDefaultsToSupabase(uid: string) {
     try {
       const memberInserts = DEFAULT_MEMBERS.map((m) => ({
-        id: m.id.startsWith("local_") ? undefined : m.id,
         user_id: uid,
         name: m.name,
         role: m.role,
         color: m.color,
       }));
-      const { data: inserted } = await supabase.from("family_members").insert(memberInserts).select("id,name");
+      const { data: inserted } = await supabase
+        .from("family_members")
+        .insert(memberInserts)
+        .select("id,name");
 
-      // Map inserted IDs for chore assignment
       const idMap: Record<string, string> = {};
       if (inserted) {
-        DEFAULT_MEMBERS.forEach((dm, i) => { if (inserted[i]) idMap[dm.id] = inserted[i].id; });
+        DEFAULT_MEMBERS.forEach((dm, i) => {
+          if ((inserted as any[])[i]) idMap[dm.id] = (inserted as any[])[i].id;
+        });
       }
 
       const choreInserts = DEFAULT_CHORES.map((c) => ({
@@ -152,13 +172,10 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
         recurring: c.recurring,
       }));
       await supabase.from("chores").insert(choreInserts);
-
-      // Re-sync after seeding
       await syncFromSupabase(uid);
     } catch {}
   }
 
-  // Persist to AsyncStorage whenever data changes
   useEffect(() => {
     if (!loaded) return;
     AsyncStorage.setItem(STORAGE_KEYS.members, JSON.stringify(members));
@@ -173,20 +190,25 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
     setUserIdState(id);
   }, []);
 
-  const addMember = useCallback(async (name: string, role: FamilyMember["role"]) => {
+  const addMember = useCallback(async (name: string, role: FamilyMember["role"], invitedEmail?: string) => {
     const color = MEMBER_COLORS[Math.floor(Math.random() * MEMBER_COLORS.length)];
     const localId = generateId();
 
-    setMembers((prev) => [...prev, { id: localId, name, role, color }]);
+    setMembers((prev) => [
+      ...prev,
+      { id: localId, name, role, color, invitedEmail, isOnApp: undefined },
+    ]);
 
     if (userId) {
       const { data } = await supabase
         .from("family_members")
-        .insert({ user_id: userId, name, role, color })
+        .insert({ user_id: userId, name, role, color, invited_email: invitedEmail ?? null })
         .select("id")
         .single();
       if (data) {
-        setMembers((prev) => prev.map((m) => (m.id === localId ? { ...m, id: data.id } : m)));
+        setMembers((prev) =>
+          prev.map((m) => (m.id === localId ? { ...m, id: (data as any).id } : m))
+        );
       }
     }
   }, [userId]);
@@ -199,6 +221,34 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
     }
   }, [userId]);
 
+  const updateMemberEmail = useCallback(async (memberId: string, email: string) => {
+    const trimmed = email.trim().toLowerCase();
+
+    // Check if this email is registered on the app
+    let isOnApp = false;
+    try {
+      const { data } = await (supabase.from("parivaar_users") as any)
+        .select("id")
+        .eq("email", trimmed)
+        .maybeSingle();
+      isOnApp = data !== null;
+    } catch {}
+
+    setMembers((prev) =>
+      prev.map((m) =>
+        m.id === memberId ? { ...m, invitedEmail: trimmed, isOnApp } : m
+      )
+    );
+
+    if (userId) {
+      await supabase
+        .from("family_members")
+        .update({ invited_email: trimmed })
+        .eq("id", memberId)
+        .eq("user_id", userId);
+    }
+  }, [userId]);
+
   const addChore = useCallback(async (chore: Omit<Chore, "id" | "createdAt" | "completed">) => {
     const localId = generateId();
     const now = new Date().toISOString();
@@ -207,11 +257,20 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
     if (userId) {
       const { data } = await supabase
         .from("chores")
-        .insert({ user_id: userId, title: chore.title, assigned_to: chore.assignedTo, completed: false, category: chore.category, recurring: chore.recurring })
+        .insert({
+          user_id: userId,
+          title: chore.title,
+          assigned_to: chore.assignedTo,
+          completed: false,
+          category: chore.category,
+          recurring: chore.recurring,
+        })
         .select("id")
         .single();
       if (data) {
-        setChores((prev) => prev.map((c) => (c.id === localId ? { ...c, id: data.id } : c)));
+        setChores((prev) =>
+          prev.map((c) => (c.id === localId ? { ...c, id: (data as any).id } : c))
+        );
       }
     }
   }, [userId]);
@@ -237,7 +296,11 @@ export function FamilyProvider({ children }: { children: React.ReactNode }) {
   }, [userId]);
 
   return (
-    <FamilyContext.Provider value={{ members, chores, userId, setUserId, addMember, deleteMember, addChore, toggleChore, deleteChore }}>
+    <FamilyContext.Provider value={{
+      members, chores, userId, setUserId,
+      addMember, deleteMember, updateMemberEmail,
+      addChore, toggleChore, deleteChore,
+    }}>
       {children}
     </FamilyContext.Provider>
   );

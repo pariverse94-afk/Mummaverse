@@ -27,6 +27,10 @@ function NativeTabLayout() {
         <Icon sf={{ default: "cross.case", selected: "cross.case.fill" }} />
         <Label>First Aid</Label>
       </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="profile">
+        <Icon sf={{ default: "person.circle", selected: "person.circle.fill" }} />
+        <Label>Profile</Label>
+      </NativeTabs.Trigger>
     </NativeTabs>
   );
 }
@@ -109,6 +113,18 @@ function ClassicTabLayout() {
               <SymbolView name="cross.case" tintColor={color} size={22} />
             ) : (
               <Ionicons name="medkit-outline" size={22} color={color} />
+            ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "Profile",
+          tabBarIcon: ({ color }) =>
+            isIOS ? (
+              <SymbolView name="person.circle" tintColor={color} size={24} />
+            ) : (
+              <Feather name="user" size={22} color={color} />
             ),
         }}
       />
