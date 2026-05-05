@@ -1,5 +1,4 @@
 import { Feather } from "@expo/vector-icons";
-import { router } from "expo-router";
 import React, { useRef, useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -23,19 +22,23 @@ export default function OnboardingScreen() {
   const [yourName, setYourName] = useState("");
   const [familyName, setFamilyName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [saveError, setSaveError] = useState("");
   const familyNameRef = useRef<TextInput>(null);
 
   const handleGetStarted = async () => {
     if (!yourName.trim() || loading) return;
     setLoading(true);
+    setSaveError("");
     try {
       await saveProfile(
         yourName.trim(),
         familyName.trim() || `${yourName.trim()}'s Family`,
       );
-      router.replace("/(tabs)");
-    } catch {
+      // NavigationGuard watches profile state and navigates to /(tabs) automatically
+      // once saveProfile sets the profile. Keep loading=true until unmount.
+    } catch (e: unknown) {
       setLoading(false);
+      setSaveError(e instanceof Error ? e.message : "Could not save profile. Please try again.");
     }
   };
 
@@ -142,14 +145,18 @@ export default function OnboardingScreen() {
         />
 
         <TouchableOpacity
-          style={[styles.continueBtn, { backgroundColor: colors.primary, opacity: yourName.trim() ? 1 : 0.4 }]}
+          style={[styles.continueBtn, { backgroundColor: colors.primary, opacity: yourName.trim() && !loading ? 1 : 0.4 }]}
           onPress={handleGetStarted}
           disabled={!yourName.trim() || loading}
           testID="profile-continue-btn"
         >
-          <Text style={styles.continueBtnText}>Enter Pariverse</Text>
-          <Feather name="arrow-right" size={18} color="#fff" />
+          <Text style={styles.continueBtnText}>{loading ? "Saving…" : "Enter Pariverse"}</Text>
+          {!loading && <Feather name="arrow-right" size={18} color="#fff" />}
         </TouchableOpacity>
+
+        {saveError ? (
+          <Text style={[styles.errorNote, { color: "#D32F2F" }]}>{saveError}</Text>
+        ) : null}
 
         <Text style={[styles.privacyNote, { color: colors.mutedForeground }]}>
           Your data is securely stored and synced via Supabase
@@ -185,4 +192,5 @@ const styles = StyleSheet.create({
   optional: { fontFamily: "Inter_400Regular", fontSize: 12 },
   input: { borderWidth: 1, borderRadius: 12, padding: 14, fontSize: 15, fontFamily: "Inter_400Regular", marginBottom: 20 },
   privacyNote: { fontSize: 12, fontFamily: "Inter_400Regular", textAlign: "center", marginTop: 20 },
+  errorNote: { fontSize: 13, fontFamily: "Inter_500Medium", textAlign: "center", marginTop: 8 },
 });

@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { Session } from "@supabase/supabase-js";
-import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
 export interface UserProfile {
@@ -25,15 +25,19 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  // Prevent concurrent loadProfile calls (getSession + onAuthStateChange can both fire)
+  const loadingRef = useRef(false);
 
   async function loadProfile(authId: string, email?: string) {
+    if (loadingRef.current) return;
+    loadingRef.current = true;
     try {
-      const { data } = await (supabase.from("parivaar_users") as any)
+      const { data, error } = await (supabase.from("parivaar_users") as any)
         .select("id, name, family_name, email")
         .eq("auth_id", authId)
         .maybeSingle();
 
-      if (data) {
+      if (data && !error) {
         const p: UserProfile = {
           id: data.id,
           name: data.name,
@@ -43,33 +47,37 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         setProfile(p);
         await AsyncStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(p));
       } else {
-        // No row yet — check cache for offline
+        // No DB row yet (auth_id column missing, or new user) — try cache
         const cached = await AsyncStorage.getItem(PROFILE_CACHE_KEY);
         if (cached) {
-          const p = JSON.parse(cached) as UserProfile;
-          if (p.id.startsWith("auth_")) setProfile(p);
-          else setProfile(null);
+          // Accept any cached profile; it was cleared on sign-out so it belongs
+          // to the current auth session
+          setProfile(JSON.parse(cached));
         } else {
           setProfile(null);
         }
       }
     } catch {
+      // Network failure — try cache so the app works offline
       const cached = await AsyncStorage.getItem(PROFILE_CACHE_KEY);
       if (cached) setProfile(JSON.parse(cached));
       else setProfile(null);
     } finally {
       setIsLoaded(true);
+      loadingRef.current = false;
     }
   }
 
   useEffect(() => {
     let mounted = true;
 
+    // getSession() reads persisted tokens; onAuthStateChange fires for URL-based
+    // PKCE code exchange. We guard with loadingRef so only one loadProfile runs.
     supabase.auth.getSession().then(({ data: { session: s } }) => {
       if (!mounted) return;
       setSession(s);
       if (s) {
-        loadProfile(s.user.id, s.user.email);
+        loadProfile(s.user.id, s.user.email ?? undefined);
       } else {
         setIsLoaded(true);
       }
@@ -79,6 +87,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       if (!mounted) return;
       setSession(s);
       if (s) {
+        // Reset loadingRef so this auth state change always triggers a load
+        loadingRef.current = false;
         await loadProfile(s.user.id, s.user.email ?? undefined);
       } else {
         setProfile(null);
@@ -94,8 +104,13 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const saveProfile = useCallback(async (name: string, familyName: string) => {
-    const authUser = session?.user ?? (await supabase.auth.getUser()).data.user;
-    if (!authUser) return;
+    // Prefer React state; fall back to a live Supabase getUser call
+    let authUser = session?.user ?? null;
+    if (!authUser) {
+      const { data } = await supabase.auth.getUser();
+      authUser = data.user;
+    }
+    if (!authUser) throw new Error("Not authenticated. Please sign in again.");
 
     const { data, error } = await (supabase.from("parivaar_users") as any)
       .upsert(
@@ -105,7 +120,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       .select("id")
       .single();
 
-    const id = (!error && data) ? data.id : `auth_${authUser.id}`;
+    // If DB fails (e.g. migration_auth.sql not run yet), use a synthetic local id
+    const id = (!error && data?.id) ? data.id : `auth_${authUser.id}`;
     const p: UserProfile = { id, name, familyName, email: authUser.email ?? undefined };
     await AsyncStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(p));
     setProfile(p);

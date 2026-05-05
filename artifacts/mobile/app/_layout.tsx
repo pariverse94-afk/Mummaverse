@@ -7,7 +7,7 @@ import {
 } from "@expo-google-fonts/inter";
 import { setBaseUrl } from "@workspace/api-client-react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { router, Stack } from "expo-router";
+import { router, Stack, useSegments } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
@@ -33,18 +33,30 @@ function NavigationGuard({ children }: { children: React.ReactNode }) {
   const { session, profile, isLoaded } = useUser();
   const { setUserId: setFamilyUserId } = useFamily();
   const { setUserId: setMealUserId } = useMeals();
+  const segments = useSegments();
 
   useEffect(() => {
     if (!isLoaded) return;
 
+    const seg0 = segments[0] as string | undefined;
+    const onLogin = seg0 === "login";
+    const onOnboarding = seg0 === "onboarding";
+    const onTabs = seg0 === "(tabs)";
+
     if (!session) {
-      router.replace("/login");
+      if (!onLogin) router.replace("/login");
     } else if (!profile) {
-      router.replace("/onboarding");
+      if (!onOnboarding) router.replace("/onboarding");
     } else {
       setFamilyUserId(profile.id);
       setMealUserId(profile.id);
+      // Profile just became available while still on an auth screen — go to app
+      if (onLogin || onOnboarding) {
+        router.replace("/(tabs)");
+      }
     }
+    // Note: segments intentionally omitted from deps to avoid navigation loops.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoaded, session, profile]);
 
   if (!isLoaded) {
