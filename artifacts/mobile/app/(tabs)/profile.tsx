@@ -119,6 +119,8 @@ export default function ProfileScreen() {
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteChecking, setInviteChecking] = useState(false);
   const [inviteSaved, setInviteSaved] = useState(false);
+  const [inviteSending, setInviteSending] = useState(false);
+  const [inviteEmailSent, setInviteEmailSent] = useState(false);
 
   const topPad = Platform.OS === "web" ? 67 : insets.top;
 
@@ -146,6 +148,8 @@ export default function ProfileScreen() {
     setInviteMember(member);
     setInviteEmail(member.invitedEmail ?? "");
     setInviteSaved(false);
+    setInviteSending(false);
+    setInviteEmailSent(false);
     setInviteVisible(true);
   };
 
@@ -156,8 +160,41 @@ export default function ProfileScreen() {
     setInviteChecking(false);
     setInviteSaved(true);
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    // Refresh inviteMember status from members list
-    setTimeout(() => setInviteVisible(false), 1200);
+    // If already on app, close after a moment — otherwise stay open to send invite email
+  };
+
+  const handleSendInviteEmail = async () => {
+    if (!inviteMember || !inviteEmail.trim()) return;
+    setInviteSending(true);
+    try {
+      const domain = process.env.EXPO_PUBLIC_DOMAIN;
+      const url = domain ? `https://${domain}/api/invite` : "/api/invite";
+      const redirectTo = domain ? `https://${domain}/` : undefined;
+
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: inviteEmail.trim(),
+          memberName: inviteMember.name,
+          inviterName: profile?.name ?? "Your family",
+          redirectTo,
+        }),
+      });
+      const json = await res.json() as { success?: boolean; alreadyOnApp?: boolean; error?: string };
+
+      if (json.success) {
+        setInviteEmailSent(true);
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        setTimeout(() => setInviteVisible(false), 2000);
+      } else {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      }
+    } catch {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+    } finally {
+      setInviteSending(false);
+    }
   };
 
   const handleShareApp = async () => {
@@ -444,7 +481,7 @@ export default function ProfileScreen() {
                     Invite {inviteMember.name}
                   </Text>
                   <Text style={[styles.inviteSubtitle, { color: colors.mutedForeground }]}>
-                    Enter their email to check if they are on Pariverse
+                    Enter their email to invite them to Pariverse
                   </Text>
                 </View>
               </View>
@@ -462,13 +499,12 @@ export default function ProfileScreen() {
               autoFocus
             />
 
+            {/* Status result after checking */}
             {inviteSaved && updatedInviteMember && (
               <View
                 style={[
                   styles.inviteResult,
-                  {
-                    backgroundColor: updatedInviteMember.isOnApp ? "#D1FAE5" : "#FEF3C7",
-                  },
+                  { backgroundColor: updatedInviteMember.isOnApp ? "#D1FAE5" : "#FEF3C7" },
                 ]}
               >
                 <Feather
@@ -484,33 +520,60 @@ export default function ProfileScreen() {
                 >
                   {updatedInviteMember.isOnApp
                     ? `${inviteMember?.name} is already on Pariverse!`
-                    : "Not on Pariverse yet. Share the app with them!"}
+                    : `${inviteMember?.name} isn't on Pariverse yet — send them an invite!`}
                 </Text>
               </View>
             )}
 
-            <TouchableOpacity
-              style={[styles.sheetBtn, { backgroundColor: colors.primary, opacity: inviteEmail.trim() ? 1 : 0.5 }]}
-              onPress={handleSaveInvite}
-              disabled={!inviteEmail.trim() || inviteChecking}
-            >
-              {inviteChecking ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <Text style={styles.sheetBtnText}>
-                  {inviteSaved ? "Saved" : "Check & Save"}
+            {/* Email sent confirmation */}
+            {inviteEmailSent && (
+              <View style={[styles.inviteResult, { backgroundColor: "#D1FAE5" }]}>
+                <Feather name="send" size={16} color="#059669" />
+                <Text style={[styles.inviteResultText, { color: "#059669" }]}>
+                  Invite sent to {inviteEmail}!
                 </Text>
-              )}
-            </TouchableOpacity>
+              </View>
+            )}
 
-            {inviteSaved && updatedInviteMember && !updatedInviteMember.isOnApp && (
+            {/* Primary action: Check & Save → then Send Invite Email */}
+            {!inviteSaved ? (
+              <TouchableOpacity
+                style={[styles.sheetBtn, { backgroundColor: colors.primary, opacity: inviteEmail.trim() ? 1 : 0.5 }]}
+                onPress={handleSaveInvite}
+                disabled={!inviteEmail.trim() || inviteChecking}
+              >
+                {inviteChecking ? (
+                  <ActivityIndicator color="#fff" />
+                ) : (
+                  <Text style={styles.sheetBtnText}>Check & Save</Text>
+                )}
+              </TouchableOpacity>
+            ) : updatedInviteMember && !updatedInviteMember.isOnApp && !inviteEmailSent ? (
+              <TouchableOpacity
+                style={[styles.sheetBtn, { backgroundColor: colors.primary, opacity: inviteSending ? 0.6 : 1 }]}
+                onPress={handleSendInviteEmail}
+                disabled={inviteSending}
+              >
+                {inviteSending ? (
+                  <ActivityIndicator color="#fff" />
+                ) : (
+                  <>
+                    <Feather name="send" size={16} color="#fff" />
+                    <Text style={styles.sheetBtnText}>Send Invite Email</Text>
+                  </>
+                )}
+              </TouchableOpacity>
+            ) : null}
+
+            {/* Share link as secondary action when not yet sent */}
+            {inviteSaved && updatedInviteMember && !updatedInviteMember.isOnApp && !inviteEmailSent && (
               <TouchableOpacity
                 style={[styles.shareBtn, { borderColor: colors.border }]}
                 onPress={handleShareApp}
               >
                 <Feather name="share-2" size={15} color={colors.foreground} />
                 <Text style={[styles.shareBtnText, { color: colors.foreground }]}>
-                  Share Pariverse App
+                  Share App Link Instead
                 </Text>
               </TouchableOpacity>
             )}
