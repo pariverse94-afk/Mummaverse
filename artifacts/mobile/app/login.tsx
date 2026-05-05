@@ -56,42 +56,61 @@ export default function LoginScreen() {
     setInfo("");
 
     try {
-      const redirectUrl = Linking.createURL("/");
-      const { data, error: oauthError } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: { redirectTo: redirectUrl, skipBrowserRedirect: true },
-      });
-
-      if (oauthError || !data.url) {
-        setError(
-          oauthError?.message ??
-          "Google sign-in is not configured yet. Enable Google provider in your Supabase dashboard."
-        );
-        setGoogleLoading(false);
-        return;
-      }
-
-      const result = await WebBrowser.openAuthSessionAsync(data.url, redirectUrl);
-      if (result.type === "success" && result.url) {
-        const hash = result.url.split("#")[1] ?? "";
-        const params = new URLSearchParams(hash);
-        const accessToken = params.get("access_token");
-        const refreshToken = params.get("refresh_token");
-        if (accessToken && refreshToken) {
-          const { error: sessionError } = await supabase.auth.setSession({
-            access_token: accessToken,
-            refresh_token: refreshToken,
-          });
-          if (sessionError) setError(sessionError.message);
-        } else {
-          setError("Could not complete Google sign-in. Please try email instead.");
+      if (Platform.OS === "web") {
+        // On web: full-page redirect flow. Supabase will send the user to Google,
+        // then Google redirects back to Supabase callback, then Supabase redirects
+        // to our page. detectSessionInUrl:true in supabase.ts picks up the tokens.
+        const redirectTo = typeof window !== "undefined"
+          ? window.location.origin + "/"
+          : undefined;
+        const { error: oauthError } = await supabase.auth.signInWithOAuth({
+          provider: "google",
+          options: { redirectTo },
+        });
+        if (oauthError) {
+          setError(oauthError.message);
+          setGoogleLoading(false);
         }
+        // Page will navigate away — keep loading spinner until redirect happens.
+      } else {
+        // On native (iOS / Android): in-app browser popup with deep-link callback.
+        const redirectUrl = Linking.createURL("/");
+        const { data, error: oauthError } = await supabase.auth.signInWithOAuth({
+          provider: "google",
+          options: { redirectTo: redirectUrl, skipBrowserRedirect: true },
+        });
+
+        if (oauthError || !data.url) {
+          setError(
+            oauthError?.message ??
+            "Google sign-in is not configured yet. Enable Google provider in your Supabase dashboard."
+          );
+          setGoogleLoading(false);
+          return;
+        }
+
+        const result = await WebBrowser.openAuthSessionAsync(data.url, redirectUrl);
+        if (result.type === "success" && result.url) {
+          const hash = result.url.split("#")[1] ?? "";
+          const params = new URLSearchParams(hash);
+          const accessToken = params.get("access_token");
+          const refreshToken = params.get("refresh_token");
+          if (accessToken && refreshToken) {
+            const { error: sessionError } = await supabase.auth.setSession({
+              access_token: accessToken,
+              refresh_token: refreshToken,
+            });
+            if (sessionError) setError(sessionError.message);
+          } else {
+            setError("Could not complete Google sign-in. Please try email instead.");
+          }
+        }
+        setGoogleLoading(false);
       }
     } catch {
       setError("Google sign-in requires setup in Supabase dashboard. Use email sign-in for now.");
+      setGoogleLoading(false);
     }
-
-    setGoogleLoading(false);
   };
 
   const canSubmit = email.trim().length > 0 && password.trim().length >= 6 && !loading;
