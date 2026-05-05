@@ -1,8 +1,7 @@
 import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
-  Image,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -24,16 +23,20 @@ export default function OnboardingScreen() {
   const [yourName, setYourName] = useState("");
   const [familyName, setFamilyName] = useState("");
   const [loading, setLoading] = useState(false);
+  const familyNameRef = useRef<TextInput>(null);
 
   const handleGetStarted = async () => {
-    if (!yourName.trim()) return;
+    if (!yourName.trim() || loading) return;
     setLoading(true);
-    await saveProfile(
-      yourName.trim(),
-      familyName.trim() || `${yourName.trim()}'s Family`,
-    );
-    setLoading(false);
-    router.replace("/(tabs)");
+    try {
+      await saveProfile(
+        yourName.trim(),
+        familyName.trim() || `${yourName.trim()}'s Family`,
+      );
+      router.replace("/(tabs)");
+    } catch {
+      setLoading(false);
+    }
   };
 
   if (step === "welcome") {
@@ -120,11 +123,14 @@ export default function OnboardingScreen() {
           onChangeText={setYourName}
           autoFocus
           returnKeyType="next"
+          onSubmitEditing={() => familyNameRef.current?.focus()}
+          blurOnSubmit={false}
           testID="your-name-input"
         />
 
         <Text style={[styles.inputLabel, { color: colors.foreground }]}>Family name <Text style={[styles.optional, { color: colors.mutedForeground }]}>(optional)</Text></Text>
         <TextInput
+          ref={familyNameRef}
           style={[styles.input, { backgroundColor: colors.muted, color: colors.foreground, borderColor: colors.border }]}
           placeholder="e.g. The Sharma Family"
           placeholderTextColor={colors.mutedForeground}
