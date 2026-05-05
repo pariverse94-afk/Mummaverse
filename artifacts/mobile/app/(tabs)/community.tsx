@@ -18,6 +18,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useColors } from "@/hooks/useColors";
 import { useCommunity, type PostCategory } from "@/context/CommunityContext";
 import { PostCard } from "@/components/PostCard";
+import { ProfileButton } from "@/components/ProfileButton";
 
 const CATEGORIES: { key: PostCategory | "all"; label: string }[] = [
   { key: "all", label: "All" },
@@ -61,13 +62,16 @@ export default function CommunityScreen() {
       {/* Header */}
       <View style={[styles.header, { paddingTop: topPad + 12 }]}>
         <Text style={[styles.title, { color: colors.foreground }]}>Mom's Corner</Text>
-        <TouchableOpacity
-          style={[styles.newPostBtn, { backgroundColor: colors.primary }]}
-          onPress={() => setPostModalVisible(true)}
-          testID="new-post-btn"
-        >
-          <Feather name="edit-2" size={16} color="#fff" />
-        </TouchableOpacity>
+        <View style={styles.headerActions}>
+          <TouchableOpacity
+            style={[styles.newPostBtn, { backgroundColor: colors.primary }]}
+            onPress={() => setPostModalVisible(true)}
+            testID="new-post-btn"
+          >
+            <Feather name="edit-2" size={16} color="#fff" />
+          </TouchableOpacity>
+          <ProfileButton />
+        </View>
       </View>
 
       {/* Category filter */}
@@ -183,6 +187,7 @@ export default function CommunityScreen() {
 const styles = StyleSheet.create({
   screen: { flex: 1 },
   header: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 20, paddingBottom: 12 },
+  headerActions: { flexDirection: "row", alignItems: "center", gap: 10 },
   title: { fontSize: 24, fontFamily: "Inter_700Bold" },
   newPostBtn: { width: 38, height: 38, borderRadius: 19, alignItems: "center", justifyContent: "center" },
   filterRow: { marginBottom: 12 },

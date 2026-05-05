@@ -19,6 +19,7 @@ import { useColors } from "@/hooks/useColors";
 import { useFamily, type Chore } from "@/context/FamilyContext";
 import { useUser } from "@/context/UserContext";
 import { ChoreCard } from "@/components/ChoreCard";
+import { ProfileButton } from "@/components/ProfileButton";
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -93,13 +94,16 @@ export default function HomeScreen() {
             </Text>
             <Text style={[styles.dateLabel, { color: colors.foreground }]}>{getTodayLabel()}</Text>
           </View>
-          <TouchableOpacity
-            style={[styles.addBtn, { backgroundColor: colors.primary }]}
-            onPress={() => setAddModalVisible(true)}
-            testID="add-chore-btn"
-          >
-            <Feather name="plus" size={20} color="#fff" />
-          </TouchableOpacity>
+          <View style={styles.headerActions}>
+            <TouchableOpacity
+              style={[styles.addBtn, { backgroundColor: colors.primary }]}
+              onPress={() => setAddModalVisible(true)}
+              testID="add-chore-btn"
+            >
+              <Feather name="plus" size={20} color="#fff" />
+            </TouchableOpacity>
+            <ProfileButton />
+          </View>
         </View>
 
         {/* Family Members */}
@@ -236,6 +240,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: 24,
   },
+  headerActions: { flexDirection: "row", alignItems: "center", gap: 10 },
   greeting: { fontSize: 13, fontFamily: "Inter_400Regular" },
   dateLabel: { fontSize: 22, fontFamily: "Inter_700Bold", marginTop: 2 },
   addBtn: {

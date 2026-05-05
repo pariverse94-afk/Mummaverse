@@ -14,6 +14,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useColors } from "@/hooks/useColors";
 import { useMeals, type DayKey, type MealSlot } from "@/context/MealContext";
 import { MealCard } from "@/components/MealCard";
+import { ProfileButton } from "@/components/ProfileButton";
 
 const DAYS: DayKey[] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const SLOTS: MealSlot[] = ["breakfast", "lunch", "dinner"];
@@ -58,14 +59,17 @@ export default function MealsScreen() {
               {totalMeals} meals planned this week
             </Text>
           </View>
-          <TouchableOpacity
-            style={[styles.suggestBtn, { backgroundColor: colors.primary }]}
-            onPress={() => router.push("/meals/suggest")}
-            testID="ai-suggest-btn"
-          >
-            <Ionicons name="sparkles" size={14} color="#fff" />
-            <Text style={styles.suggestBtnText}>AI Plan</Text>
-          </TouchableOpacity>
+          <View style={styles.headerActions}>
+            <TouchableOpacity
+              style={[styles.suggestBtn, { backgroundColor: colors.primary }]}
+              onPress={() => router.push("/meals/suggest")}
+              testID="ai-suggest-btn"
+            >
+              <Ionicons name="sparkles" size={14} color="#fff" />
+              <Text style={styles.suggestBtnText}>AI Plan</Text>
+            </TouchableOpacity>
+            <ProfileButton />
+          </View>
         </View>
 
         {/* Day selector */}
@@ -180,6 +184,7 @@ const styles = StyleSheet.create({
   screen: { flex: 1 },
   scrollContent: { paddingHorizontal: 20 },
   headerRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 },
+  headerActions: { flexDirection: "row", alignItems: "center", gap: 10 },
   title: { fontSize: 24, fontFamily: "Inter_700Bold" },
   subtitle: { fontSize: 13, fontFamily: "Inter_400Regular", marginTop: 2 },
   suggestBtn: {

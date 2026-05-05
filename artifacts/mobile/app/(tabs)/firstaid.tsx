@@ -1,5 +1,6 @@
 import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { ProfileButton } from "@/components/ProfileButton";
 import React from "react";
 import {
   Platform,
@@ -72,14 +73,17 @@ export default function FirstAidScreen() {
             <Text style={[styles.title, { color: colors.foreground }]}>First Aid</Text>
             <Text style={[styles.subtitle, { color: colors.mutedForeground }]}>AI guidance for children</Text>
           </View>
-          <TouchableOpacity
-            style={[styles.aiBtn, { backgroundColor: colors.primary }]}
-            onPress={() => router.push({ pathname: "/firstaid/chat", params: { conditionId: "general", conditionTitle: "General Query" } })}
-            testID="ai-chat-btn"
-          >
-            <Ionicons name="sparkles" size={14} color="#fff" />
-            <Text style={styles.aiBtnText}>Ask AI</Text>
-          </TouchableOpacity>
+          <View style={styles.headerActions}>
+            <TouchableOpacity
+              style={[styles.aiBtn, { backgroundColor: colors.primary }]}
+              onPress={() => router.push({ pathname: "/firstaid/chat", params: { conditionId: "general", conditionTitle: "General Query" } })}
+              testID="ai-chat-btn"
+            >
+              <Ionicons name="sparkles" size={14} color="#fff" />
+              <Text style={styles.aiBtnText}>Ask AI</Text>
+            </TouchableOpacity>
+            <ProfileButton />
+          </View>
         </View>
 
         {/* Emergency banner */}
@@ -158,6 +162,7 @@ const styles = StyleSheet.create({
   screen: { flex: 1 },
   scrollContent: { paddingHorizontal: 20 },
   headerRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 },
+  headerActions: { flexDirection: "row", alignItems: "center", gap: 10 },
   title: { fontSize: 24, fontFamily: "Inter_700Bold" },
   subtitle: { fontSize: 13, fontFamily: "Inter_400Regular", marginTop: 2 },
   aiBtn: { flexDirection: "row", alignItems: "center", gap: 5, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 20 },
