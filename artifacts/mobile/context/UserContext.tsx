@@ -18,8 +18,14 @@ interface UserContextValue {
   signOut: () => Promise<void>;
 }
 
-const PROFILE_CACHE_KEY = "parivaar_user_profile_v3";
+// Per-user cache so profile survives sign-out → sign-in for the same account.
+// Changing the prefix version forces a fresh load if the schema ever changes.
+const PROFILE_CACHE_PREFIX = "parivaar_profile_v5_";
 const UserContext = createContext<UserContextValue | null>(null);
+
+function profileCacheKey(userId: string) {
+  return `${PROFILE_CACHE_PREFIX}${userId}`;
+}
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
@@ -32,36 +38,39 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     if (loadingRef.current) return;
     loadingRef.current = true;
     try {
-      const { data, error } = await (supabase.from("parivaar_users") as any)
-        .select("id, name, family_name, email")
-        .eq("auth_id", authId)
-        .maybeSingle();
+      // 1. Try Supabase DB (only works after migration_auth.sql is run)
+      try {
+        const { data, error } = await (supabase.from("parivaar_users") as any)
+          .select("id, name, family_name, email")
+          .eq("auth_id", authId)
+          .maybeSingle();
 
-      if (data && !error) {
-        const p: UserProfile = {
-          id: data.id,
-          name: data.name,
-          familyName: data.family_name,
-          email: data.email ?? email,
-        };
-        setProfile(p);
-        await AsyncStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(p));
-      } else {
-        // No DB row yet (auth_id column missing, or new user) — try cache
-        const cached = await AsyncStorage.getItem(PROFILE_CACHE_KEY);
-        if (cached) {
-          // Accept any cached profile; it was cleared on sign-out so it belongs
-          // to the current auth session
-          setProfile(JSON.parse(cached));
-        } else {
-          setProfile(null);
+        if (data && !error) {
+          const p: UserProfile = {
+            id: data.id,
+            name: data.name,
+            familyName: data.family_name,
+            email: data.email ?? email,
+          };
+          setProfile(p);
+          // Refresh the per-user cache with the latest DB data
+          await AsyncStorage.setItem(profileCacheKey(authId), JSON.stringify(p));
+          return;
         }
+      } catch {
+        // DB query failed (e.g. auth_id column missing) — fall through to cache
       }
-    } catch {
-      // Network failure — try cache so the app works offline
-      const cached = await AsyncStorage.getItem(PROFILE_CACHE_KEY);
-      if (cached) setProfile(JSON.parse(cached));
-      else setProfile(null);
+
+      // 2. Fall back to the per-user AsyncStorage cache.
+      //    This cache survives sign-out so returning users don't re-enter their name.
+      const cached = await AsyncStorage.getItem(profileCacheKey(authId));
+      if (cached) {
+        setProfile(JSON.parse(cached));
+        return;
+      }
+
+      // 3. New user — needs onboarding
+      setProfile(null);
     } finally {
       setIsLoaded(true);
       loadingRef.current = false;
@@ -71,8 +80,6 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let mounted = true;
 
-    // getSession() reads persisted tokens; onAuthStateChange fires for URL-based
-    // PKCE code exchange. We guard with loadingRef so only one loadProfile runs.
     supabase.auth.getSession().then(({ data: { session: s } }) => {
       if (!mounted) return;
       setSession(s);
@@ -87,12 +94,10 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       if (!mounted) return;
       setSession(s);
       if (s) {
-        // Reset loadingRef so this auth state change always triggers a load
         loadingRef.current = false;
         await loadProfile(s.user.id, s.user.email ?? undefined);
       } else {
         setProfile(null);
-        await AsyncStorage.removeItem(PROFILE_CACHE_KEY);
         setIsLoaded(true);
       }
     });
@@ -103,34 +108,62 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
+  /**
+   * Saves the user's profile locally and best-effort to Supabase.
+   * NEVER throws — callers can always await without try/catch.
+   */
   const saveProfile = useCallback(async (name: string, familyName: string) => {
-    // Prefer React state; fall back to a live Supabase getUser call
+    // Resolve the current auth user
     let authUser = session?.user ?? null;
     if (!authUser) {
-      const { data } = await supabase.auth.getUser();
-      authUser = data.user;
+      try {
+        const { data } = await supabase.auth.getUser();
+        authUser = data.user;
+      } catch {
+        // Network error — will save locally only
+      }
     }
-    if (!authUser) throw new Error("Not authenticated. Please sign in again.");
 
-    const { data, error } = await (supabase.from("parivaar_users") as any)
-      .upsert(
-        { auth_id: authUser.id, email: authUser.email, name, family_name: familyName },
-        { onConflict: "auth_id" }
-      )
-      .select("id")
-      .single();
+    const userId = authUser?.id ?? `anon_${Date.now()}`;
+    const cacheKey = profileCacheKey(userId);
 
-    // If DB fails (e.g. migration_auth.sql not run yet), use a synthetic local id
-    const id = (!error && data?.id) ? data.id : `auth_${authUser.id}`;
-    const p: UserProfile = { id, name, familyName, email: authUser.email ?? undefined };
-    await AsyncStorage.setItem(PROFILE_CACHE_KEY, JSON.stringify(p));
+    // Best-effort Supabase upsert (fails gracefully if migration_auth.sql not yet run)
+    let dbId: string | null = null;
+    if (authUser) {
+      try {
+        const { data, error } = await (supabase.from("parivaar_users") as any)
+          .upsert(
+            { auth_id: authUser.id, email: authUser.email, name, family_name: familyName },
+            { onConflict: "auth_id" },
+          )
+          .select("id")
+          .single();
+        if (!error && data?.id) dbId = data.id;
+      } catch {
+        // DB save failed — local only is fine
+      }
+    }
+
+    const id = dbId ?? `auth_${userId}`;
+    const p: UserProfile = { id, name, familyName, email: authUser?.email ?? undefined };
+
+    // Always persist to per-user cache — this is the source of truth until DB is set up
+    try {
+      await AsyncStorage.setItem(cacheKey, JSON.stringify(p));
+    } catch {
+      // AsyncStorage failure is very unlikely; profile is still set in memory
+    }
+
     setProfile(p);
+    // saveProfile intentionally does NOT throw — NavigationGuard will react to setProfile
   }, [session]);
 
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
+    // Clear family/meal data but NOT the per-user profile cache.
+    // The cache is keyed by user ID, so it won't bleed across different accounts,
+    // and keeping it means returning users skip onboarding on next sign-in.
     await AsyncStorage.multiRemove([
-      PROFILE_CACHE_KEY,
       "parivaar_members_v2",
       "parivaar_chores_v2",
       "parivaar_meals_v2",
