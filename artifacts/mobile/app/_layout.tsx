@@ -7,9 +7,9 @@ import {
 } from "@expo-google-fonts/inter";
 import { setBaseUrl } from "@workspace/api-client-react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { router, Stack, useSegments } from "expo-router";
+import { router, Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
@@ -33,30 +33,31 @@ function NavigationGuard({ children }: { children: React.ReactNode }) {
   const { session, profile, isLoaded } = useUser();
   const { setUserId: setFamilyUserId } = useFamily();
   const { setUserId: setMealUserId } = useMeals();
-  const segments = useSegments();
+  // Track whether we've already navigated into the app this session.
+  // This avoids depending on useSegments() timing (which can be stale when
+  // the profile-change effect fires, causing the navigation to be silently skipped).
+  const inAppRef = useRef(false);
 
   useEffect(() => {
     if (!isLoaded) return;
 
-    const seg0 = segments[0] as string | undefined;
-    const onLogin = seg0 === "login";
-    const onOnboarding = seg0 === "onboarding";
-    const onTabs = seg0 === "(tabs)";
-
     if (!session) {
-      if (!onLogin) router.replace("/login");
+      inAppRef.current = false;
+      router.replace("/login");
     } else if (!profile) {
-      if (!onOnboarding) router.replace("/onboarding");
+      inAppRef.current = false;
+      router.replace("/onboarding");
     } else {
       setFamilyUserId(profile.id);
       setMealUserId(profile.id);
-      // Profile just became available while still on an auth screen — go to app
-      if (onLogin || onOnboarding) {
+      // Navigate to tabs the first time we have a valid session + profile.
+      // Subsequent profile updates (e.g. name edits) skip this so we don't
+      // reset the user's tab position.
+      if (!inAppRef.current) {
+        inAppRef.current = true;
         router.replace("/(tabs)");
       }
     }
-    // Note: segments intentionally omitted from deps to avoid navigation loops.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoaded, session, profile]);
 
   if (!isLoaded) {
