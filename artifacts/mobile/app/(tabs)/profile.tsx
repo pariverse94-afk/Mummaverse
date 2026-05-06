@@ -127,21 +127,31 @@ export default function ProfileScreen() {
   const handleSaveProfile = async () => {
     if (!editName.trim()) return;
     setEditSaving(true);
-    await saveProfile(editName.trim(), editFamilyName.trim() || `${editName.trim()}'s Family`);
-    setEditSaving(false);
-    setEditVisible(false);
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    try {
+      await saveProfile(editName.trim(), editFamilyName.trim() || `${editName.trim()}'s Family`);
+      setEditVisible(false);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    } catch {
+      // saveProfile failed — modal stays open so user can retry
+    } finally {
+      setEditSaving(false);
+    }
   };
 
   const handleAddMember = async () => {
     if (!newMemberName.trim()) return;
     setAddSaving(true);
-    await addMember(newMemberName.trim(), newMemberRole);
-    setAddSaving(false);
-    setNewMemberName("");
-    setNewMemberRole("parent");
-    setAddVisible(false);
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    try {
+      await addMember(newMemberName.trim(), newMemberRole);
+      setNewMemberName("");
+      setNewMemberRole("parent");
+      setAddVisible(false);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    } catch {
+      // addMember failed — modal stays open so user can retry
+    } finally {
+      setAddSaving(false);
+    }
   };
 
   const openInvite = (member: FamilyMember) => {

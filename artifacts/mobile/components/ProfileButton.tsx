@@ -55,10 +55,15 @@ export function ProfileButton() {
   const handleSave = async () => {
     if (!editName.trim()) return;
     setSaving(true);
-    await saveProfile(editName.trim(), editFamily.trim());
-    setSaving(false);
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    setSheetVisible(false);
+    try {
+      await saveProfile(editName.trim(), editFamily.trim());
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      setSheetVisible(false);
+    } catch {
+      // saveProfile failed — sheet stays open so user can retry
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleSignOut = async () => {
