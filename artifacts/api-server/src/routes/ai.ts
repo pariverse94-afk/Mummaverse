@@ -1,5 +1,8 @@
-import { anthropic } from "@workspace/integrations-anthropic-ai";
+import Groq from "groq-sdk";
 import { Router } from "express";
+
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+const MODEL = "llama-3.3-70b-versatile";
 
 const router = Router();
 
@@ -29,7 +32,7 @@ Requirements:
 - Include a mix of regions (North Indian, South Indian, etc.) when relevant
 - Ensure child-friendly options
 
-Respond with valid JSON in this exact format:
+Respond with valid JSON only, no markdown, no extra text. Use this exact format:
 {
   "meals": [
     {
@@ -46,19 +49,17 @@ Respond with valid JSON in this exact format:
   "tips": "Batch cook the dal on weekends and refrigerate for up to 3 days."
 }`;
 
-    const message = await anthropic.messages.create({
-      model: "claude-sonnet-4-6",
-      max_tokens: 8192,
-      messages: [{ role: "user", content: prompt }],
+    const completion = await groq.chat.completions.create({
+      model: MODEL,
+      max_tokens: 4096,
+      messages: [
+        { role: "system", content: "You are a helpful nutritionist. Always respond with valid JSON only, no markdown code blocks, no extra text." },
+        { role: "user", content: prompt },
+      ],
     });
 
-    const block = message.content[0];
-    if (block.type !== "text") {
-      res.status(500).json({ error: "Unexpected AI response format" });
-      return;
-    }
-
-    const jsonMatch = block.text.match(/\{[\s\S]*\}/);
+    const text = completion.choices[0]?.message?.content ?? "";
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       res.status(500).json({ error: "Could not parse AI response" });
       return;
@@ -88,7 +89,7 @@ Child's age: ${childAge}
 Perceived severity: ${severity}
 ${additionalInfo ? `Additional context: ${additionalInfo}` : ""}
 
-Important: 
+Important:
 - Always start with emergency indicators — tell parents when to call 108 or go to hospital immediately
 - Provide step-by-step first aid instructions
 - Use simple, reassuring language appropriate for a worried parent
@@ -98,18 +99,20 @@ Important:
 
 Format your response clearly with headers and numbered steps.`;
 
-    const stream = anthropic.messages.stream({
-      model: "claude-sonnet-4-6",
-      max_tokens: 8192,
-      messages: [{ role: "user", content: prompt }],
+    const stream = await groq.chat.completions.create({
+      model: MODEL,
+      max_tokens: 4096,
+      stream: true,
+      messages: [
+        { role: "system", content: "You are a helpful medical information assistant for parents in India. Provide clear, reassuring, and actionable guidance." },
+        { role: "user", content: prompt },
+      ],
     });
 
-    for await (const event of stream) {
-      if (
-        event.type === "content_block_delta" &&
-        event.delta.type === "text_delta"
-      ) {
-        res.write(`data: ${JSON.stringify({ content: event.delta.text })}\n\n`);
+    for await (const chunk of stream) {
+      const text = chunk.choices[0]?.delta?.content;
+      if (text) {
+        res.write(`data: ${JSON.stringify({ content: text })}\n\n`);
       }
     }
 

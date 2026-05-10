@@ -102,7 +102,7 @@ where not exists (select 1 from community_posts where is_seed = true limit 1);
 router.post("/db/setup", async (req, res) => {
   try {
     const sb = getSupabaseClient();
-    const { error: sqlError } = await sb.rpc("exec_sql", { sql: SETUP_SQL }).single();
+    const { error: sqlError } = await (sb as any).rpc("exec_sql", { sql: SETUP_SQL });
     if (sqlError && !sqlError.message.includes("already exists")) {
       req.log.warn({ err: sqlError }, "RPC not available, tables may already exist");
     }
