@@ -17,7 +17,7 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_DOMAIN": "YOUR-SERVICE.up.railway.app"
+        "EXPO_PUBLIC_DOMAIN": "pariverse-api-production.up.railway.app"
       }
     },
     "production": {
@@ -25,7 +25,7 @@
         "buildType": "app-bundle"
       },
       "env": {
-        "EXPO_PUBLIC_DOMAIN": "YOUR-SERVICE.up.railway.app"
+        "EXPO_PUBLIC_DOMAIN": "pariverse-api-production.up.railway.app"
       }
     }
   },
