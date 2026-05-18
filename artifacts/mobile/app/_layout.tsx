@@ -88,6 +88,10 @@ function RootLayoutNav() {
         name="meals/suggest"
         options={{ headerShown: false, presentation: "card" }}
       />
+      <Stack.Screen
+        name="legal"
+        options={{ headerShown: false, presentation: "card" }}
+      />
     </Stack>
   );
 }

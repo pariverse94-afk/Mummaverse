@@ -195,6 +195,18 @@ export function ProfileButton() {
 
             <View style={[styles.divider, { backgroundColor: colors.border }]} />
 
+            {/* Legal */}
+            <TouchableOpacity
+              style={[styles.legalBtn, { borderColor: colors.border }]}
+              onPress={() => { setSheetVisible(false); router.push("/legal"); }}
+            >
+              <Feather name="file-text" size={16} color={colors.mutedForeground} />
+              <Text style={[styles.legalText, { color: colors.mutedForeground }]}>Privacy Policy &amp; Terms</Text>
+              <Feather name="chevron-right" size={14} color={colors.mutedForeground} />
+            </TouchableOpacity>
+
+            <View style={[styles.divider, { backgroundColor: colors.border }]} />
+
             {/* Sign out */}
             <TouchableOpacity
               style={[styles.signOutBtn, { borderColor: "#DC2626" }]}
@@ -299,6 +311,15 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   saveBtnText: { color: "#fff", fontSize: 15, fontFamily: "Inter_600SemiBold" },
+  legalBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    padding: 14,
+    borderRadius: 13,
+    borderWidth: 1,
+  },
+  legalText: { flex: 1, fontSize: 14, fontFamily: "Inter_500Medium" },
   signOutBtn: {
     flexDirection: "row",
     alignItems: "center",
