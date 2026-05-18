@@ -92,6 +92,10 @@ function RootLayoutNav() {
         name="legal"
         options={{ headerShown: false, presentation: "card" }}
       />
+      <Stack.Screen
+        name="delete-account"
+        options={{ headerShown: false, presentation: "card" }}
+      />
     </Stack>
   );
 }

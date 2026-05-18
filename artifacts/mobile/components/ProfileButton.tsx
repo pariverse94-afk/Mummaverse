@@ -205,6 +205,15 @@ export function ProfileButton() {
               <Feather name="chevron-right" size={14} color={colors.mutedForeground} />
             </TouchableOpacity>
 
+            <TouchableOpacity
+              style={[styles.legalBtn, { borderColor: colors.border, marginTop: 8 }]}
+              onPress={() => { setSheetVisible(false); router.push("/delete-account"); }}
+            >
+              <Feather name="trash-2" size={16} color="#C44B2B" />
+              <Text style={[styles.legalText, { color: "#C44B2B" }]}>Request Account Deletion</Text>
+              <Feather name="chevron-right" size={14} color="#C44B2B" />
+            </TouchableOpacity>
+
             <View style={[styles.divider, { backgroundColor: colors.border }]} />
 
             {/* Sign out */}
