@@ -1,0 +1,37 @@
+05-20 16:46:36.998  1104  1408 D ActivityTaskManager: finishFixedRotationTransform, r=ActivityRecord{f341489 u0 com.pariverse.app/.MainActivity t743 f}}, caller=com.android.server.wm.WindowToken.finishFixedRotationTransform:669 com.android.server.wm.DisplayContent$FixedRotationTransitionListener.onAppTransitionFinishedLocked:7222 com.android.server.wm.AppTransition.notifyAppTransitionFinishedLocked:553 com.android.server.wm.ActivityRecord.onAnimationFinished:7702 com.android.server.wm.ActivityRecord.postApplyAnimation:5437
+05-20 16:46:37.002  6833  6833 I SDHMS:PowerAnomaly:ANALYZERAPPERROR: analyze app error : uid=10409, pkg=com.pariverse.app, appErrorCount=6
+05-20 16:46:37.029  1104  9192 V WindowManager: Relayout Window{2d823dd u0 com.pariverse.app/com.pariverse.app.MainActivity}: viewVisibility=8 req=1600x2560 d0
+05-20 16:46:37.040   929  2873 I SurfaceFlinger: id=4865 createSurf (0x0),-1 flag=80004, 37b0972 Application Error: com.pariverse.app#0
+05-20 16:46:37.041  1104  1405 V WindowManager: Changing focus from Window{6cfd2c7 u0 com.sec.android.app.launcher/com.sec.android.app.launcher.activities.LauncherActivity} to Window{37b0972 u0 Application Error: com.pariverse.app} displayId=0 Callers=com.android.server.wm.RootWindowContainer.updateFocusedWindowLocked:575 com.android.server.wm.WindowManagerService.updateFocusedWindowLocked:6338 com.android.server.wm.WindowManagerService.addWindow:1961 com.android.server.wm.Session.addToDisplayAsUser:203
+05-20 16:46:37.063  1104  1405 V WindowManager: Relayout Window{37b0972 u0 Application Error: com.pariverse.app}: viewVisibility=0 req=879x470 d0
+05-20 16:46:37.064  1104  1405 D WindowManager: isScreenshotDisabledLocked - win: Window{37b0972 u0 Application Error: com.pariverse.app}
+05-20 16:46:37.065   929  1336 I SurfaceFlinger: id=4868 createSurf (889x480),1 flag=4, Application Error: com.pariverse.app#0
+05-20 16:46:37.065  1104  1405 D WindowManager: makeSurface duration=1 name=Application Error: com.pariverse.app
+05-20 16:46:37.091  1104  2374 D WindowManager: isScreenshotDisabledLocked - win: Window{2d823dd u0 com.pariverse.app/com.pariverse.app.MainActivity}
+05-20 16:46:37.091  1104  2374 I WindowManager: Destroying surface Surface(name=com.pariverse.app/com.pariverse.app.MainActivity$_5367)/@0x84cd60f called by com.android.server.wm.WindowStateAnimator.destroySurface:1804 com.android.server.wm.WindowStateAnimator.destroySurfaceLocked:771 com.android.server.wm.WindowState.removeImmediately:2711 com.android.server.wm.WindowState.removeIfPossible:2876 com.android.server.wm.WindowState.removeIfPossible:2734 com.android.server.wm.WindowManagerService.removeWindow:2186 com.android.server.wm.Session.remove:220 android.view.IWindowSession$Stub.onTransact:813
+05-20 16:46:37.091   929  2873 I Layer   : id=4854 removeFromCurrentState com.pariverse.app/com.pariverse.app.MainActivity$_5367#0 (112)
+05-20 16:46:37.092   929  2570 I SurfaceFlinger: id=4854 Removed com.pariverse.app/com.pariverse.app.MainActivity$_5367#0 (112)
+05-20 16:46:37.093   929  2570 I Layer   : id=4853 removeFromCurrentState 2d823dd com.pariverse.app/com.pariverse.app.MainActivity#0 (112)
+05-20 16:46:37.095   929  2570 I SurfaceFlinger: id=4853 Removed 2d823dd com.pariverse.app/com.pariverse.app.MainActivity#0 (112)
+05-20 16:46:37.096  1104  2374 I ActivityTaskManager: Removing activity ActivityRecord{f341489 u0 com.pariverse.app/.MainActivity t743 f}}(activityDestroyed)  from stack callers=com.android.server.wm.ActivityRecord.destroyed:4008 com.android.server.wm.ActivityTaskManagerService.activityDestroyed:2669 android.app.IActivityTaskManager$Stub.onTransact:2304 android.os.Binder.execTransactInternal:1195 android.os.Binder.execTransact:1159
+05-20 16:46:37.099   929  1008 I Layer   : id=4845 removeFromCurrentState ActivityRecord{f341489 u0 com.pariverse.app/.MainActivity t743}#0 (112)
+05-20 16:46:37.099   929  1008 I SurfaceFlinger: id=4845 Removed ActivityRecord{f341489 u0 com.pariverse.app/.MainActivity t743}#0 (112)
+05-20 16:46:37.100  1104  1405 D WindowManager: finishDrawingWindow: Window{37b0972 u0 Application Error: com.pariverse.app} mDrawState=DRAW_PENDING
+05-20 16:46:37.100  1104  1405 D WindowManager: setDisableFlags: displayId=0, vis=0x8008, appearance=0, transientState=Pair{[I@89cd088 [I@37e6a21}, isFullscreen=false, isImmersive=false, barType=0, win=Window{37b0972 u0 Application Error: com.pariverse.app}
+05-20 16:46:37.101  1104  1408 I WindowManager: Reparenting to leash, surface=Surface(name=37b0972 Application Error: com.pariverse.app)/@0x7726d34, leashParent=Surface(name=WindowToken{d10067d android.view.ViewRootImpl$W@6383741})/@0x336875d
+05-20 16:46:37.101   929  1336 I SurfaceFlinger: id=4869 createSurf (0x0),-1 flag=24004, Surface(name=37b0972 Application Error: com.pariverse.app)/@0x7726d34 - animation-leash#0
+05-20 16:46:37.102  1104  1408 D WindowManager: makeSurface duration=0 leash=Surface(name=Surface(name=37b0972 Application Error: com.pariverse.app)/@0x7726d34 - animation-leash)/@0xa6428d2
+05-20 16:46:37.107   929   929 I Layer   : id=4845[1] Destroyed ActivityRecord{f341489 u0 com.pariverse.app/.MainActivity t743}#0
+05-20 16:46:37.107   929   929 I Layer   : id=4853[1] Destroyed 2d823dd com.pariverse.app/com.pariverse.app.MainActivity#0
+05-20 16:46:37.107   929   929 I Layer   : id=4854[1] Destroyed com.pariverse.app/com.pariverse.app.MainActivity$_5367#0
+05-20 16:46:37.156   929   929 D SurfaceFlinger:      DEVICE | 0xb400006fd443e500 | 0000 | RGBA_8888    |    0.0    0.0  480.0  889.0 | 1977  356 2457 1245 | Application Error: com.pariverse.app#0
+05-20 16:46:37.472  1104  1408 I WindowManager: Reparenting to original parent: Surface(name=WindowToken{d10067d android.view.ViewRootImpl$W@6383741})/@0x336875d, destroy=true, surface=Surface(name=37b0972 Application Error: com.pariverse.app)/@0x7726d34
+05-20 16:46:37.473   929  1336 I Layer   : id=4869 removeFromCurrentState Surface(name=37b0972 Application Error: com.pariverse.app)/@0x7726d34 - animation-leash#0 (111)
+05-20 16:46:37.474   929  1336 I SurfaceFlinger: id=4869 Removed Surface(name=37b0972 Application Error: com.pariverse.app)/@0x7726d34 - animation-leash#0 (111)
+05-20 16:46:37.490   929   929 I Layer   : id=4869[1] Destroyed Surface(name=37b0972 Application Error: com.pariverse.app)/@0x7726d34 - animation-leash#0
+05-20 16:46:41.502  5367  5587 I m.pariverse.ap: WaitForGcToComplete blocked CollectorTransition on ProfileSaver for 19.927ms
+05-20 16:46:41.525  1104  1957 I Pageboost: db create : CREATE TABLE IF NOT EXISTS compariverseapp (FILENAME TEXT, OFFSET INTEGER, SIZE INTEGER, FORVRAMDISK INTEGER, BITMAP BLOB, unique (FILENAME, OFFSET) );
+05-20 16:46:41.563  1104  1957 I Pageboost: db create : CREATE TABLE IF NOT EXISTS compariverseapp (FILENAME TEXT, OFFSET INTEGER, SIZE INTEGER, FORVRAMDISK INTEGER, BITMAP BLOB, unique (FILENAME, OFFSET) );
+05-20 16:46:41.569  1104  1957 I Pageboost: db update :com.pariverse.app ret 1
+05-20 16:46:41.643  1104  1957 I Pageboost: memUsage collected : 38504 0 384 for com.pariverse.app 5367
+05-20 16:46:42.041  5367  5653 D ProfileInstaller: Installing profile for com.pariverse.app
