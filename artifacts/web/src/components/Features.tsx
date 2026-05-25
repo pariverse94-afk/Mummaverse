@@ -3,18 +3,20 @@ import { useReveal } from '../hooks/useReveal'
 import { useEffect, useState } from 'react'
 
 function MealCalendarAnim() {
+  const meals = ['Poha', 'Dal Rice', 'Roti Sabzi', 'Upma', 'Rajma', 'Biryani', 'Idli']
   const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
-  const meals = ['Poha', 'Dal', 'Roti', 'Upma', 'Sabzi', 'Biryani', 'Idli']
   const [lit, setLit] = useState(0)
 
   useEffect(() => {
-    const id = setInterval(() => setLit(l => (l + 1) % days.length), 700)
+    const id = setInterval(() => setLit(l => (l + 1) % days.length), 800)
     return () => clearInterval(id)
   }, [])
 
   return (
-    <div className="w-full overflow-hidden rounded-xl" style={{ background: 'linear-gradient(135deg, #FFFBEB, #FEF3C7)', height: 192 }}>
-      <div className="p-4 h-full flex flex-col">
+    <div className="w-full overflow-hidden rounded-xl relative" style={{ height: 192 }}>
+      <img src="/images/meal-prep.jpg" alt="Indian meal prep" className="w-full h-full object-cover" />
+      <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(255,251,235,0.88), rgba(254,243,199,0.82))' }} />
+      <div className="absolute inset-0 p-4 flex flex-col">
         <div className="flex items-center gap-2 mb-3">
           <div className="w-5 h-5 rounded-lg bg-amber-500 flex items-center justify-center">
             <Icon icon="ph:cooking-pot-bold" className="text-white text-[10px]" />
@@ -26,10 +28,10 @@ function MealCalendarAnim() {
             <div key={i} className="flex flex-col items-center gap-1">
               <span className="text-[9px] text-amber-600 font-medium">{day}</span>
               <div
-                className={`meal-cell w-full rounded-lg border flex items-center justify-center border-amber-200 ${i === lit ? 'lit' : ''}`}
-                style={{ height: 52, transition: 'all .5s ease' }}
+                className={`meal-cell w-full rounded-lg border flex items-center justify-center border-amber-300 ${i === lit ? 'lit' : ''}`}
+                style={{ height: 52, transition: 'all .5s ease', background: i === lit ? '#f59e0b22' : 'rgba(255,255,255,0.6)' }}
               >
-                <span className="text-[7px] text-amber-700 text-center leading-tight px-0.5">{meals[i]}</span>
+                <span className="text-[7px] text-amber-800 text-center leading-tight px-0.5 font-medium">{meals[i]}</span>
               </div>
             </div>
           ))}
@@ -38,7 +40,7 @@ function MealCalendarAnim() {
           <div className="h-1 rounded-full bg-amber-200 flex-1">
             <div className="h-full rounded-full bg-amber-500 transition-all duration-500" style={{ width: `${((lit + 1) / 7) * 100}%` }} />
           </div>
-          <span className="text-[9px] text-amber-600">{lit + 1}/7</span>
+          <span className="text-[9px] text-amber-700 font-medium">{lit + 1}/7</span>
         </div>
       </div>
     </div>

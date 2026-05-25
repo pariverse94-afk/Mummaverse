@@ -35,25 +35,21 @@ function MentalLoadAnim() {
 
 function MealPlanAnim() {
   return (
-    <div className="w-full h-44 flex items-center justify-center rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, #FFFBEB, #FEF3C7)' }}>
-      <div className="relative flex items-center justify-center gap-3">
-        <div className="flex flex-col gap-2 items-center">
-          <Icon icon="ph:cooking-pot-bold" className="text-amber-500 text-4xl float-slow" />
-          <div className="text-[11px] text-amber-700 font-semibold">Dal Chawal</div>
+    <div className="w-full h-44 rounded-xl overflow-hidden relative">
+      <img
+        src="/images/meal-thali.jpg"
+        alt="Indian thali meal"
+        className="w-full h-full object-cover"
+      />
+      <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(120,60,0,0.7) 0%, rgba(0,0,0,0.1) 60%)' }} />
+      <div className="absolute bottom-3 left-3 flex items-center gap-2">
+        <div className="w-7 h-7 rounded-lg bg-amber-500 flex items-center justify-center">
+          <Icon icon="ph:cooking-pot-bold" className="text-white text-sm" />
         </div>
-        <div className="flex flex-col gap-1">
-          {['Mon', 'Tue', 'Wed', 'Thu'].map((day, i) => (
-            <div key={i} className="flex items-center gap-2 px-2 py-0.5">
-              <span className="text-[10px] text-amber-600 w-6">{day}</span>
-              <div className="h-1.5 rounded-full bg-amber-200" style={{ width: 60 + i * 15 }}>
-                <div className="h-full rounded-full bg-amber-500" style={{ width: `${50 + i * 12}%`, animation: `barGrow ${1.5 + i * 0.3}s ease-in-out infinite alternate`, animationDelay: `${i * 0.2}s`, transformOrigin: 'left' }} />
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center border border-amber-200">
-          <Icon icon="ph:check-bold" className="text-amber-600 text-sm" />
-        </div>
+        <span className="text-white text-[12px] font-semibold drop-shadow">Dal, Roti, Sabzi — sorted</span>
+      </div>
+      <div className="absolute top-3 right-3 px-2 py-1 rounded-full bg-amber-500/90 text-white text-[10px] font-bold">
+        Aaj kya banau?
       </div>
     </div>
   )
@@ -136,28 +132,21 @@ function NutritionAnim() {
 
 function ChoreLonelinessAnim() {
   return (
-    <div className="w-full h-44 flex items-center justify-center rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, #FFF5F5, #FFE4E6)' }}>
-      <div className="flex flex-col items-center gap-3">
-        <div className="flex items-end gap-4">
-          <div className="flex flex-col items-center gap-1">
-            <div className="w-10 h-10 rounded-full border-2 border-red-200 bg-red-50 flex items-center justify-center">
-              <Icon icon="ph:person-bold" className="text-red-400 text-xl" />
-            </div>
-            <div className="text-[10px] text-red-500">You</div>
-          </div>
-          <div className="flex flex-col gap-1 pb-1">
-            {['Cooking', 'Cleaning', 'Errands', 'Kids'].map((item, i) => (
-              <div key={i} className="flex items-center gap-1.5">
-                <div className="w-2 h-2 rounded-full bg-red-400" style={{ animation: `ringPulse ${1.5 + i * 0.2}s ease-in-out infinite`, animationDelay: `${i * 0.2}s` }} />
-                <span className="text-[10px] text-red-600">{item}</span>
-              </div>
-            ))}
-          </div>
+    <div className="w-full h-44 rounded-xl overflow-hidden relative">
+      <img
+        src="/images/chores-india-family.jpg"
+        alt="Family doing household chores"
+        className="w-full h-full object-cover"
+      />
+      <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(80,20,20,0.72) 0%, rgba(0,0,0,0.08) 60%)' }} />
+      <div className="absolute bottom-3 left-3 flex items-center gap-2">
+        <div className="w-7 h-7 rounded-lg bg-rose-500 flex items-center justify-center">
+          <Icon icon="ph:clipboard-text-bold" className="text-white text-sm" />
         </div>
-        <div className="px-3 py-1.5 rounded-full bg-white border border-red-200 flex items-center gap-1.5">
-          <Icon icon="ph:hands-clapping-bold" className="text-orange-500 text-sm" />
-          <span className="text-[11px] text-[#4A3728] font-medium">Share the load</span>
-        </div>
+        <span className="text-white text-[12px] font-semibold drop-shadow">Share the load</span>
+      </div>
+      <div className="absolute top-3 right-3 px-2 py-1 rounded-full bg-rose-500/90 text-white text-[10px] font-bold">
+        Nuclear family load
       </div>
     </div>
   )
