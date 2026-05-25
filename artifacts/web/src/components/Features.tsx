@@ -14,7 +14,7 @@ function MealCalendarAnim() {
 
   return (
     <div className="w-full overflow-hidden rounded-xl relative" style={{ height: 192 }}>
-      <img src="/images/meal-prep.jpg" alt="Indian meal prep" className="w-full h-full object-cover" />
+      <img src={`${import.meta.env.BASE_URL}images/meal-prep.jpg`} alt="Indian meal prep" className="w-full h-full object-cover" />
       <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(255,251,235,0.88), rgba(254,243,199,0.82))' }} />
       <div className="absolute inset-0 p-4 flex flex-col">
         <div className="flex items-center gap-2 mb-3">

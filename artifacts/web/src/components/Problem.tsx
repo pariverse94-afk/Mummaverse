@@ -37,7 +37,7 @@ function MealPlanAnim() {
   return (
     <div className="w-full h-44 rounded-xl overflow-hidden relative">
       <img
-        src="/images/meal-thali.jpg"
+        src={`${import.meta.env.BASE_URL}images/meal-thali.jpg`}
         alt="Indian thali meal"
         className="w-full h-full object-cover"
       />
@@ -134,7 +134,7 @@ function ChoreLonelinessAnim() {
   return (
     <div className="w-full h-44 rounded-xl overflow-hidden relative">
       <img
-        src="/images/chores-india-family.jpg"
+        src={`${import.meta.env.BASE_URL}images/chores-india-family.jpg`}
         alt="Family doing household chores"
         className="w-full h-full object-cover"
       />
