@@ -1,7 +1,7 @@
 import { Icon } from '@iconify/react'
 import { useReveal } from '../hooks/useReveal'
 import nutritionImg from '../assets/nutritious_meal.png'
-import firstAidImg from '../assets/first_Aid_image.png'
+import firstAidImg from '../assets/first_aid_image.png'
 const FEATURES = [
   {
     img: 'https://images.unsplash.com/photo-1742281257687-092746ad6021?w=700&h=400&fit=crop&auto=format&q=80',
