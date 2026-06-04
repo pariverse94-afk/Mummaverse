@@ -1,7 +1,7 @@
 import { Icon } from '@iconify/react'
 import { useReveal } from '../hooks/useReveal'
 
-const WAITLIST_URL = 'https://forms.gle/DEMO-REPLACE-THIS-LINK'
+const WAITLIST_URL = 'https://forms.gle/9zS6uNDvP1udzYqJ8'
 
 export default function Waitlist() {
   const ref = useReveal()

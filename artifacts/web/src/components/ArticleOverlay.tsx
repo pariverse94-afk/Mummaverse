@@ -1,7 +1,7 @@
 import { Icon } from '@iconify/react'
 import { ARTICLES, Article } from '../data/articles'
 
-const WAITLIST_URL = 'https://forms.gle/DEMO-REPLACE-THIS-LINK'
+const WAITLIST_URL = 'https://forms.gle/9zS6uNDvP1udzYqJ8'
 
 function ArticleHeroIllustration({ article }: { article: Article }) {
   return (

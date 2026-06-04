@@ -1,6 +1,6 @@
 import { Icon } from '@iconify/react'
 
-const WAITLIST_URL = 'https://forms.gle/DEMO-REPLACE-THIS-LINK'
+const WAITLIST_URL = 'https://forms.gle/9zS6uNDvP1udzYqJ8'
 const LETTERS = 'Pariverse'.split('')
 const DELAYS = [.3, .36, .42, .48, .54, .6, .66, .72, .78]
 
