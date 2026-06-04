@@ -212,10 +212,21 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Right: animated visual */}
-          <div className="anim-in-d3 hidden lg:block">
-            <div className="relative rounded-3xl overflow-hidden float-slow" style={{ height: '520px', background: 'linear-gradient(135deg, #FFF8F0 0%, #FFF3E8 50%, #FFE8D0 100%)' }}>
-              <HeroAnimation />
+          {/* Right: hero illustration */}
+          <div className="anim-in-d3 hidden lg:flex items-center justify-center">
+            <div className="relative float-slow" style={{ width: 520, height: 520 }}>
+              {/* Soft radial glow behind image */}
+              <div className="absolute inset-0 rounded-full" style={{ background: 'radial-gradient(ellipse at 50% 50%, rgba(234,88,12,.13) 0%, rgba(251,146,60,.07) 45%, transparent 72%)' }} />
+              <img
+                src={`${import.meta.env.BASE_URL}images/hero-community.png`}
+                alt="Moms coming together — the Pariverse village"
+                className="relative z-10 w-full h-full object-contain drop-shadow-xl"
+              />
+              {/* Brand label */}
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 px-4 py-2 rounded-full bg-white/70 backdrop-blur-sm border border-orange-200/40 shadow-sm">
+                <div className="w-2 h-2 rounded-full bg-orange-500 pulse-glow" />
+                <span className="text-[11px] font-semibold text-[#92400E] uppercase tracking-widest whitespace-nowrap">Your Village, Online</span>
+              </div>
             </div>
           </div>
 
