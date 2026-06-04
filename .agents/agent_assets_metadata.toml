@@ -36,6 +36,12 @@ uri = "file://artifacts/web/public/images/cartoon-meal-thali.png"
 type = "image"
 title = "generated_image"
 
+[[generated]]
+id = "8VvUDgtYPf-XC_xOKNZvd"
+uri = "file://artifacts/web/public/images/pariverse-logo.png"
+type = "image"
+title = "generated_image"
+
 [[outputs]]
 id = "6Jt4Ot0yGxVP0_BCPEH-K"
 uri = "file://docs/infra-requirements.md"

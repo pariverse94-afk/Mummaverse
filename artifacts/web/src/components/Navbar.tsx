@@ -19,9 +19,11 @@ export default function Navbar({ onLogoClick }: { onLogoClick: () => void }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 md:h-20">
             <button onClick={onLogoClick} className="flex items-center gap-2.5 anim-in" aria-label="Home">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center shadow-lg">
-                <Icon icon="ph:planet-bold" className="text-white text-lg" />
-              </div>
+              <img
+                src={`${import.meta.env.BASE_URL}images/pariverse-logo.png`}
+                alt="Pariverse logo"
+                className="w-10 h-10 rounded-xl object-cover shadow-md"
+              />
               <div className="flex flex-col leading-tight">
                 <span style={{ fontFamily: "'Oswald', sans-serif" }} className="text-lg font-medium tracking-wide text-[#2C1810]">Mummaverse</span>
                 <span className="text-[9px] uppercase tracking-[.15em] text-[#8B7355] hidden sm:block">Presents Pariverse</span>
