@@ -36,7 +36,7 @@ export default function Ecosystem() {
   const gridRef = useReveal()
 
   return (
-    <section className="relative py-24 md:py-32 bg-[#FDF8F3] overflow-hidden">
+    <section className="relative py-24 md:py-32 bg-white/80 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div ref={headRef} className="text-center mb-14 reveal">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-orange-200/50 bg-orange-50/50 mb-6">
@@ -74,7 +74,7 @@ export default function Ecosystem() {
             <EcoIllustration icon="ph:graduation-cap-bold" color="#8B7355" label="Learning" />
             <div className="p-6">
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-lg bg-[#F7EDE4] border border-[#8B7355]/15 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-white/70 border border-[#8B7355]/15 flex items-center justify-center">
                   <Icon icon="ph:graduation-cap-bold" className="text-[#8B7355] text-lg" />
                 </div>
                 <div>
@@ -91,7 +91,7 @@ export default function Ecosystem() {
             <EcoIllustration icon="ph:heart-half-bold" color="#8B7355" label="Wellbeing" />
             <div className="p-6">
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-lg bg-[#F7EDE4] border border-[#8B7355]/15 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-white/70 border border-[#8B7355]/15 flex items-center justify-center">
                   <Icon icon="ph:heart-half-bold" className="text-[#8B7355] text-lg" />
                 </div>
                 <div>

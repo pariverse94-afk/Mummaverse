@@ -14,7 +14,7 @@ function MealCalendarAnim() {
 
   return (
     <div className="w-full overflow-hidden rounded-xl relative" style={{ height: 192 }}>
-      <img src={`${import.meta.env.BASE_URL}images/meal-prep.jpg`} alt="Indian meal prep" className="w-full h-full object-cover" />
+      <img src={`${import.meta.env.BASE_URL}images/cartoon-meal-prep.png`} alt="Indian meal prep illustration" className="w-full h-full object-cover" />
       <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(255,251,235,0.88), rgba(254,243,199,0.82))' }} />
       <div className="absolute inset-0 p-4 flex flex-col">
         <div className="flex items-center gap-2 mb-3">
@@ -288,7 +288,7 @@ export default function Features() {
   const headRef = useReveal()
 
   return (
-    <section id="features" className="relative py-24 md:py-32 bg-white">
+    <section id="features" className="relative py-24 md:py-32 bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div ref={headRef} className="text-center mb-16 md:mb-20 reveal">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-orange-200/50 bg-orange-50/50 mb-6">

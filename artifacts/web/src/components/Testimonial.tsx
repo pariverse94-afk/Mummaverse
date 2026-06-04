@@ -5,7 +5,7 @@ export default function Testimonial() {
   const ref = useReveal()
 
   return (
-    <section className="relative py-20 md:py-28 bg-white">
+    <section className="relative py-20 md:py-28 bg-transparent">
       <div ref={ref} className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal">
         <Icon icon="ph:quotes-bold" className="text-5xl text-orange-200 mb-6 block mx-auto" />
         <blockquote className="text-lg md:text-xl lg:text-2xl font-light leading-relaxed mb-8 text-[#4A3728]">

@@ -37,8 +37,8 @@ function MealPlanAnim() {
   return (
     <div className="w-full h-44 rounded-xl overflow-hidden relative">
       <img
-        src={`${import.meta.env.BASE_URL}images/meal-thali.jpg`}
-        alt="Indian thali meal"
+        src={`${import.meta.env.BASE_URL}images/cartoon-meal-thali.png`}
+        alt="Indian thali meal illustration"
         className="w-full h-full object-cover"
       />
       <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(120,60,0,0.7) 0%, rgba(0,0,0,0.1) 60%)' }} />
@@ -134,8 +134,8 @@ function ChoreLonelinessAnim() {
   return (
     <div className="w-full h-44 rounded-xl overflow-hidden relative">
       <img
-        src={`${import.meta.env.BASE_URL}images/chores-india-family.jpg`}
-        alt="Family doing household chores"
+        src={`${import.meta.env.BASE_URL}images/cartoon-chores-family.png`}
+        alt="Family doing household chores illustration"
         className="w-full h-full object-cover"
       />
       <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(80,20,20,0.72) 0%, rgba(0,0,0,0.08) 60%)' }} />
@@ -255,7 +255,7 @@ export default function Problem() {
   const headRef = useReveal()
 
   return (
-    <section id="problem" className="relative py-24 md:py-32 overflow-hidden bg-[#FDF8F3]">
+    <section id="problem" className="relative py-24 md:py-32 overflow-hidden bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div ref={headRef} className="max-w-3xl mx-auto text-center mb-16 reveal">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-orange-200/50 bg-orange-50/50 mb-6">

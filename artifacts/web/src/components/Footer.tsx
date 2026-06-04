@@ -6,7 +6,7 @@ export default function Footer() {
   }
 
   return (
-    <footer className="relative border-t border-[#8B7355]/10 bg-[#F7EDE4]">
+    <footer className="relative border-t border-[#8B7355]/10 bg-white/70">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           <div className="col-span-2 md:col-span-1">

@@ -31,7 +31,7 @@ export default function FAQ() {
   const listRef = useReveal()
 
   return (
-    <section id="faq" className="relative py-24 md:py-32 bg-[#FDF8F3]">
+    <section id="faq" className="relative py-24 md:py-32 bg-transparent">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div ref={headRef} className="text-center mb-14 reveal">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-orange-200/50 bg-orange-50/50 mb-6">

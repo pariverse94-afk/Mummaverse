@@ -11,7 +11,7 @@ export default function Stats() {
   const ref = useReveal()
 
   return (
-    <section className="relative border-y border-[#8B7355]/10 bg-white">
+    <section className="relative border-y border-[#8B7355]/10 bg-white/60 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-12">
         <div ref={ref} className="grid grid-cols-2 md:grid-cols-4 gap-8 reveal">
           {STATS.map(({ value, label, highlight }) => (

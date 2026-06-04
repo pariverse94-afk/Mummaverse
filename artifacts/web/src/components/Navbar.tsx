@@ -46,7 +46,7 @@ export default function Navbar({ onLogoClick }: { onLogoClick: () => void }) {
         </div>
       </nav>
 
-      <div className={`mobile-menu fixed inset-0 z-40 bg-[#FDF8F3]/95 backdrop-blur-xl flex flex-col items-center justify-center gap-8 ${menuOpen ? 'open' : ''}`} role="dialog">
+      <div className={`mobile-menu fixed inset-0 z-40 bg-white/80/95 backdrop-blur-xl flex flex-col items-center justify-center gap-8 ${menuOpen ? 'open' : ''}`} role="dialog">
         {[['problem','Why Pariverse'],['features','Features'],['village','The Village'],['blog','Blog'],['faq','FAQ']].map(([id, label]) => (
           <button key={id} onClick={() => scrollTo(id)} style={{ fontFamily: "'Oswald', sans-serif" }} className="text-2xl font-medium uppercase tracking-wider text-[#2C1810] hover:text-[#E8600C] transition-colors">
             {label}

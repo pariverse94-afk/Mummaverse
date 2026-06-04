@@ -18,6 +18,24 @@ uri = "file://artifacts/mobile/assets/images/family-hero.png"
 type = "image"
 title = "generated_image"
 
+[[generated]]
+id = "CPP3-mTSBnwFJSRW2Gn4E"
+uri = "file://artifacts/web/public/images/cartoon-meal-prep.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "sx1jWhC4v06YYdMcm6Uog"
+uri = "file://artifacts/web/public/images/cartoon-chores-family.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "YddS97KxH2JJkmGDjygrJ"
+uri = "file://artifacts/web/public/images/cartoon-meal-thali.png"
+type = "image"
+title = "generated_image"
+
 [[outputs]]
 id = "6Jt4Ot0yGxVP0_BCPEH-K"
 uri = "file://docs/infra-requirements.md"

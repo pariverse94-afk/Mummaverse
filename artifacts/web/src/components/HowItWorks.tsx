@@ -51,7 +51,7 @@ export default function HowItWorks() {
   }, [])
 
   return (
-    <section className="relative py-24 md:py-32 bg-[#FDF8F3] overflow-hidden">
+    <section className="relative py-24 md:py-32 bg-transparent overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div ref={headRef} className="text-center mb-16 md:mb-20 reveal">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-orange-200/50 bg-orange-50/50 mb-6">
