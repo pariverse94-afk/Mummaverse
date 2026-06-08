@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import './index.css'
+import { ThemeProvider } from './context/ThemeContext'
 
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
@@ -32,7 +33,7 @@ export default function App() {
   }
 
   return (
-    <>
+    <ThemeProvider>
       <Navbar onLogoClick={closeArticle} />
       <main id="main-page">
         <Hero />
@@ -50,6 +51,6 @@ export default function App() {
         <Footer />
       </main>
       <ArticleOverlay articleId={articleId} onClose={closeArticle} />
-    </>
+    </ThemeProvider>
   )
 }

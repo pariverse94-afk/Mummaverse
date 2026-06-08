@@ -19,10 +19,23 @@
     background-attachment: fixed;
     color: #2C1810;
     overflow-x: hidden;
+    transition: background-color 300ms, color 300ms;
   }
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: #f8f8ff; }
   ::-webkit-scrollbar-thumb { background: rgba(234,88,12,.3); border-radius: 3px; }
+
+  /* ── Dark mode ── */
+  .dark body {
+    background: #12100E;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 20% 10%, rgba(234,88,12,.09) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 60%, rgba(45,106,79,.07) 0%, transparent 55%),
+      radial-gradient(ellipse 50% 60% at 50% 90%, rgba(234,88,12,.05) 0%, transparent 60%);
+    background-attachment: fixed;
+    color: #F0E6DC;
+  }
+  .dark ::-webkit-scrollbar-track { background: #1a1614; }
 }
 
 @layer components {
@@ -135,6 +148,55 @@
     -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid rgba(255,255,255,0.7);
     box-shadow: 0 1px 20px rgba(139,90,43,.06);
+    transition: background 300ms, border-color 300ms;
+  }
+  .dark .nav-glass {
+    background: rgba(18,16,14,0.85);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    box-shadow: 0 1px 20px rgba(0,0,0,.3);
+  }
+  .dark .feature-card {
+    background: rgba(30,24,20,0.80);
+    border-color: rgba(255,255,255,0.08);
+    box-shadow: 0 4px 24px -4px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+  .dark .feature-card:hover {
+    background: rgba(38,30,24,0.92);
+    border-color: rgba(234,88,12,.3);
+    box-shadow: 0 20px 50px -15px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,0.08);
+  }
+  .dark .problem-card {
+    background: rgba(30,24,20,0.78);
+    border-color: rgba(255,255,255,0.07);
+    box-shadow: 0 4px 20px -4px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+  .dark .problem-card:hover {
+    background: rgba(38,30,24,0.9);
+    border-color: rgba(234,88,12,.25);
+  }
+  .dark .blog-card {
+    background: rgba(30,24,20,0.78);
+    border-color: rgba(255,255,255,0.07);
+    box-shadow: 0 4px 20px -4px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+  .dark .blog-card:hover {
+    background: rgba(38,30,24,0.9);
+    border-color: rgba(234,88,12,.25);
+  }
+  .dark .eco-card {
+    background: rgba(30,24,20,0.78);
+    border-color: rgba(255,255,255,0.07);
+    box-shadow: 0 4px 20px -4px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+  .dark .article-overlay {
+    background: #18130f;
+  }
+  .dark .article-overlay h2,
+  .dark .article-overlay h3 { color: #F0E6DC; }
+  .dark .article-overlay p,
+  .dark .article-overlay li { color: #a89180; }
+  .dark .mobile-menu {
+    background: rgba(18,16,14,0.97) !important;
   }
 
   .stat-item { position: relative; }

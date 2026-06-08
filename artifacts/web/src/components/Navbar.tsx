@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { Icon } from '@iconify/react'
+import { useTheme } from '../context/ThemeContext'
 
 const WAITLIST_URL = 'https://forms.gle/9zS6uNDvP1udzYqJ8'
 
 export default function Navbar({ onLogoClick }: { onLogoClick: () => void }) {
   const [menuOpen, setMenuOpen] = useState(false)
+  const { theme, toggle } = useTheme()
 
   const closeMenu = () => setMenuOpen(false)
 
@@ -37,10 +39,22 @@ export default function Navbar({ onLogoClick }: { onLogoClick: () => void }) {
             </div>
 
             <div className="flex items-center gap-3 anim-in-d2">
+              <button
+                onClick={toggle}
+                aria-label="Toggle dark mode"
+                className="w-9 h-9 rounded-xl flex items-center justify-center border transition-all duration-300"
+                style={{
+                  background: theme === 'dark' ? 'rgba(255,255,255,0.07)' : 'rgba(234,88,12,0.07)',
+                  borderColor: theme === 'dark' ? 'rgba(255,255,255,0.12)' : 'rgba(234,88,12,0.2)',
+                  color: theme === 'dark' ? '#fb923c' : '#92400e',
+                }}
+              >
+                <Icon icon={theme === 'dark' ? 'ph:sun-bold' : 'ph:moon-bold'} className="text-lg" />
+              </button>
               <a href={WAITLIST_URL} target="_blank" rel="noreferrer" className="hidden sm:inline-flex btn-primary text-[15px] font-semibold px-5 py-2.5 rounded-xl">
                 Join Waitlist
               </a>
-              <button className="md:hidden text-[#2C1810] p-2" onClick={() => setMenuOpen(o => !o)} aria-label="Menu">
+              <button className="md:hidden text-[#2C1810] dark:text-[#F0E6DC] p-2" onClick={() => setMenuOpen(o => !o)} aria-label="Menu">
                 <Icon icon={menuOpen ? 'ph:x-bold' : 'ph:list-bold'} className="text-2xl" />
               </button>
             </div>
