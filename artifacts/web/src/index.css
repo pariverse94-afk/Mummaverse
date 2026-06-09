@@ -495,6 +495,13 @@ html.dark .waitlist-card {
   border-color: rgba(255,255,255,0.08) !important;
 }
 
+/* Chores section pastel cards */
+html.dark [class*="bg-orange-50"] { background: rgba(120,50,10,0.25) !important; border-color: rgba(234,88,12,0.2) !important; }
+html.dark [class*="bg-amber-50"]  { background: rgba(120,80,0,0.22)  !important; border-color: rgba(217,119,6,0.2)  !important; }
+html.dark [class*="bg-emerald-50"]{ background: rgba(0,80,40,0.22)   !important; border-color: rgba(5,150,105,0.2)  !important; }
+html.dark [class*="bg-purple-50"] { background: rgba(60,20,100,0.22)  !important; border-color: rgba(147,51,234,0.2)  !important; }
+html.dark [class*="bg-white\/70"] { background: rgba(255,255,255,0.06) !important; }
+
 /* Blog card text areas (the white p-6 / p-5 divs inside .blog-card) */
 html.dark .blog-card [class*="bg-white"] {
   background: rgba(26,20,16,0.95) !important;
