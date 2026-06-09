@@ -7,10 +7,10 @@ export default function Waitlist() {
   const ref = useReveal()
 
   return (
-    <section id="waitlist" className="relative py-24 md:py-32 bg-white">
+    <section id="waitlist" className="relative py-24 md:py-32 bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div ref={ref} className="max-w-2xl mx-auto reveal">
-          <div className="beam-container relative bg-white/70 border border-[#8B7355]/10 rounded-2xl p-8 md:p-12 text-center overflow-hidden">
+          <div className="beam-container waitlist-card relative bg-white/70 border border-[#8B7355]/10 rounded-2xl p-8 md:p-12 text-center overflow-hidden">
             <div className="beam" style={{ left: '25%', animationDelay: '0s' }} />
             <div className="beam" style={{ left: '50%', animationDelay: '2.5s' }} />
             <div className="beam" style={{ left: '75%', animationDelay: '5s' }} />

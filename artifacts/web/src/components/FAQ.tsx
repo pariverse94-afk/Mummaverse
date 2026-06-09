@@ -14,7 +14,7 @@ function FaqItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false)
 
   return (
-    <div className="faq-item bg-white border border-[#8B7355]/10 rounded-xl overflow-hidden">
+    <div className="faq-item rounded-xl overflow-hidden">
       <button className="w-full flex items-center justify-between p-5 text-left" onClick={() => setOpen(o => !o)}>
         <span className="text-[16px] font-semibold pr-4 text-[#2C1810]">{q}</span>
         <Icon icon="ph:caret-down-bold" className={`faq-chevron text-[#9c8b7e] text-xl flex-shrink-0 ${open ? 'rotated' : ''}`} />

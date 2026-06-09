@@ -481,3 +481,25 @@ html.dark [class*="bg-orange-50"] { background: rgba(234,88,12,0.12) !important;
 
 /* Dividers */
 html.dark .stat-item::after { background: rgba(255,255,255,0.08) !important; }
+
+/* FAQ items */
+html.dark .faq-item {
+  background: rgba(30,24,20,0.85) !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+}
+html.dark .faq-item button { background: transparent !important; }
+
+/* Waitlist card */
+html.dark .waitlist-card {
+  background: rgba(30,24,20,0.85) !important;
+  border-color: rgba(255,255,255,0.08) !important;
+}
+
+/* Blog card text areas (the white p-6 / p-5 divs inside .blog-card) */
+html.dark .blog-card [class*="bg-white"] {
+  background: rgba(26,20,16,0.95) !important;
+}
+/* Also catch the direct bg-white without slashes */
+html.dark .blog-card > div:last-child {
+  background: rgba(26,20,16,0.95) !important;
+}
