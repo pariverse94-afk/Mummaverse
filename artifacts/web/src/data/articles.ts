@@ -76,7 +76,7 @@ export const ARTICLES: Article[] = [
     gradientTo: '#FEF3C7',
     alt: 'Meal planning illustration',
     title: 'Aaj Kya Banau? End the Daily Struggle',
-    summary: 'A practical weekly system that works.',
+    summary: 'Decision fatigue by 6 PM is real. This five-step Sunday system ends the "aaj kya banau" spiral and cuts daily cooking stress in half.',
     ctaBg: 'bg-orange-50/30 border-orange-200/30',
     ctaText: 'Let Pariverse handle "aaj kya banau" for you.',
     content: `
@@ -108,7 +108,7 @@ export const ARTICLES: Article[] = [
     gradientTo: '#DBEAFE',
     alt: 'First aid illustration',
     title: 'First Aid at Home: What Every Mom Should Know',
-    summary: 'Doctor-reviewed guide for emergencies.',
+    summary: 'Burns, fevers, choking, head bumps — a doctor-reviewed Indian home guide so you never have to Google at 2 AM again.',
     ctaBg: 'bg-blue-50/30 border-blue-200/30',
     ctaText: 'No more Googling at 2 AM.',
     content: `
@@ -151,7 +151,7 @@ export const ARTICLES: Article[] = [
     gradientTo: '#D1FAE5',
     alt: 'Nutrition illustration',
     title: "Your Child's Nutrition: The Gaps No One Talks About",
-    summary: 'Common deficiencies and simple fixes.',
+    summary: '"My child eats well" can still mean iron, vitamin D, calcium or B12 deficiency. Here are the signs to spot and the simple kitchen fixes.',
     ctaBg: 'bg-emerald-50/30 border-emerald-200/30',
     ctaText: 'Know what your family eats - without obsessing.',
     content: `
@@ -181,7 +181,7 @@ export const ARTICLES: Article[] = [
     gradientTo: '#EDE9FE',
     alt: 'Mental health illustration',
     title: 'Nuclear Family Guilt: Why You Feel Like Failing',
-    summary: 'That nagging feeling - it is not your fault.',
+    summary: 'That constant feeling of not doing enough — it is not a personal failure. It is a structural problem. Here is why, and what actually helps.',
     ctaBg: 'bg-purple-50/30 border-purple-200/30',
     ctaText: 'You deserve systems that support you, not guilt that drains you.',
     content: `
