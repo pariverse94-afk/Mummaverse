@@ -25,16 +25,6 @@
   ::-webkit-scrollbar-track { background: #f8f8ff; }
   ::-webkit-scrollbar-thumb { background: rgba(234,88,12,.3); border-radius: 3px; }
 
-  /* ── Dark mode ── */
-  .dark body {
-    background: #12100E;
-    background-image:
-      radial-gradient(ellipse 80% 50% at 20% 10%, rgba(234,88,12,.09) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 40% at 80% 60%, rgba(45,106,79,.07) 0%, transparent 55%),
-      radial-gradient(ellipse 50% 60% at 50% 90%, rgba(234,88,12,.05) 0%, transparent 60%);
-    background-attachment: fixed;
-    color: #F0E6DC;
-  }
   .dark ::-webkit-scrollbar-track { background: #1a1614; }
 }
 
@@ -453,22 +443,41 @@
   100% { height: 80%; }
 }
 
-/* ── Dark mode overrides (outside @layer so they beat all Tailwind utilities) ── */
-.dark .text-\[#2C1810\] { color: #F0E6DC; }
-.dark .text-\[#4A3728\] { color: #DDD0C4; }
-.dark .text-\[#6b5c50\] { color: #C4AD9C; }
-.dark .text-\[#8B7355\] { color: #A8917A; }
-.dark .text-\[#9c8b7e\] { color: #B0A090; }
-.dark .text-\[#92400E\] { color: #fb923c; }
-.dark .text-\[#8B4513\] { color: #fb923c; }
+/* ── Dark mode: body background & base text ── */
+html.dark body {
+  background: #12100E !important;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 20% 10%, rgba(234,88,12,.09) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 60%, rgba(45,106,79,.07) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 60% at 50% 90%, rgba(234,88,12,.05) 0%, transparent 60%) !important;
+  background-attachment: fixed !important;
+  color: #F0E6DC !important;
+}
 
-.dark .border-\[#8B7355\]\/10 { border-color: rgba(255,255,255,0.07); }
-.dark .border-\[#8B7355\]\/20 { border-color: rgba(255,255,255,0.10); }
-.dark .border-orange-200\/50 { border-color: rgba(234,88,12,0.25); }
+/* ── Dark mode overrides ──
+   Use attribute substring selectors to avoid CSS escaping issues with Tailwind
+   arbitrary-value classes like text-[#2C1810]. These run outside @layer so they
+   always beat @layer utilities. ── */
 
-.dark .bg-orange-50\/50 { background: rgba(234,88,12,0.12); }
-.dark .bg-white\/60 { background: rgba(255,255,255,0.06); }
-.dark .bg-white\/70 { background: rgba(255,255,255,0.07); }
-.dark .bg-white\/80 { background: rgba(255,255,255,0.08); }
+/* Primary dark-brown → warm off-white */
+html.dark [class*="2C1810"] { color: #F0E6DC !important; }
+/* Deep brown → lighter cream */
+html.dark [class*="4A3728"] { color: #DDD0C4 !important; }
+/* Medium brown body text */
+html.dark [class*="6b5c50"] { color: #C4AD9C !important; }
+/* Subdued label brown */
+html.dark [class*="8B7355"] { color: #A8917A !important; }
+/* Faint muted brown */
+html.dark [class*="9c8b7e"] { color: #B0A090 !important; }
+/* Amber-brown → saffron */
+html.dark [class*="92400E"] { color: #fb923c !important; }
+html.dark [class*="8B4513"] { color: #fb923c !important; }
 
-.dark .stat-item::after { background: rgba(255,255,255,0.08); }
+/* White/light backgrounds become dark glass in dark mode */
+html.dark [class*="bg-white\/60"] { background: rgba(255,255,255,0.05) !important; }
+html.dark [class*="bg-white\/70"] { background: rgba(255,255,255,0.06) !important; }
+html.dark [class*="bg-white\/80"] { background: rgba(255,255,255,0.07) !important; }
+html.dark [class*="bg-orange-50"] { background: rgba(234,88,12,0.12) !important; }
+
+/* Dividers */
+html.dark .stat-item::after { background: rgba(255,255,255,0.08) !important; }
