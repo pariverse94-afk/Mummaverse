@@ -101,10 +101,10 @@ export default function Village() {
                   >
                     <Icon icon={tile.icon} style={{ color: tile.iconColor, fontSize: 28 }} className="float-slow" />
                   </div>
-                  <div className="text-2xl font-bold mb-1" style={{ color: tile.iconColor, fontFamily: "'Oswald', sans-serif" }}>
+                  <div className="text-4xl font-bold mb-2" style={{ color: tile.iconColor, fontFamily: "'Oswald', sans-serif" }}>
                     {tile.stat}
                   </div>
-                  <p className="text-[12px] text-[#6b5c50] leading-tight" style={{ whiteSpace: 'pre-line' }}>{tile.label}</p>
+                  <p className="text-[15px] text-[#6b5c50] leading-snug font-medium" style={{ whiteSpace: 'pre-line' }}>{tile.label}</p>
                 </div>
               ))}
             </div>
