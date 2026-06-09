@@ -48,11 +48,11 @@
   .btn-outline:active { transform: scale(.98); }
 
   .feature-card {
-    background: rgba(255,255,255,0.72);
+    background: rgba(255,252,248,0.60);
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
-    border: 1px solid rgba(255,255,255,0.6);
-    box-shadow: 0 4px 24px -4px rgba(139,90,43,.08), inset 0 1px 0 rgba(255,255,255,0.9);
+    border: 1px solid rgba(139,90,43,0.18);
+    box-shadow: 0 2px 0 rgba(255,255,255,0.9) inset, 0 8px 32px -6px rgba(139,90,43,.14), 0 1px 4px rgba(139,90,43,.06);
     transition: all 500ms cubic-bezier(.23,1,.32,1);
     position: relative;
     overflow: hidden;
@@ -68,51 +68,51 @@
   }
   .feature-card:hover::before { opacity: 1; }
   .feature-card:hover {
-    background: rgba(255,255,255,0.88);
-    border-color: rgba(234,88,12,.25);
+    background: rgba(255,255,255,0.82);
+    border-color: rgba(234,88,12,.35);
     transform: translateY(-4px);
-    box-shadow: 0 20px 50px -15px rgba(139,90,43,.18), inset 0 1px 0 rgba(255,255,255,1);
+    box-shadow: 0 2px 0 rgba(255,255,255,1) inset, 0 24px 56px -14px rgba(139,90,43,.22), 0 1px 4px rgba(139,90,43,.08);
   }
 
   .problem-card {
-    background: rgba(255,255,255,0.68);
+    background: rgba(255,252,248,0.58);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255,255,255,0.6);
-    box-shadow: 0 4px 20px -4px rgba(139,90,43,.07), inset 0 1px 0 rgba(255,255,255,0.9);
+    border: 1px solid rgba(139,90,43,0.16);
+    box-shadow: 0 2px 0 rgba(255,255,255,0.9) inset, 0 6px 28px -6px rgba(139,90,43,.12), 0 1px 3px rgba(139,90,43,.06);
     transition: all 400ms;
   }
   .problem-card:hover {
-    background: rgba(255,255,255,0.85);
-    border-color: rgba(234,88,12,.2);
-    box-shadow: 0 12px 32px -10px rgba(139,90,43,.13), inset 0 1px 0 rgba(255,255,255,1);
+    background: rgba(255,255,255,0.80);
+    border-color: rgba(234,88,12,.30);
+    box-shadow: 0 2px 0 rgba(255,255,255,1) inset, 0 16px 40px -10px rgba(139,90,43,.18);
   }
 
   .blog-card {
-    background: rgba(255,255,255,0.68);
+    background: rgba(255,252,248,0.58);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255,255,255,0.6);
-    box-shadow: 0 4px 20px -4px rgba(139,90,43,.07), inset 0 1px 0 rgba(255,255,255,0.9);
+    border: 1px solid rgba(139,90,43,0.16);
+    box-shadow: 0 2px 0 rgba(255,255,255,0.9) inset, 0 6px 28px -6px rgba(139,90,43,.12), 0 1px 3px rgba(139,90,43,.06);
     transition: all 500ms cubic-bezier(.23,1,.32,1);
     overflow: hidden;
     cursor: pointer;
   }
   .blog-card:hover {
-    background: rgba(255,255,255,0.88);
-    border-color: rgba(234,88,12,.2);
+    background: rgba(255,255,255,0.82);
+    border-color: rgba(234,88,12,.30);
     transform: translateY(-3px);
-    box-shadow: 0 15px 35px -10px rgba(139,90,43,.15), inset 0 1px 0 rgba(255,255,255,1);
+    box-shadow: 0 2px 0 rgba(255,255,255,1) inset, 0 18px 42px -10px rgba(139,90,43,.18);
   }
   .blog-card .blog-img { transition: transform 700ms cubic-bezier(.23,1,.32,1); }
   .blog-card:hover .blog-img { transform: scale(1.05); }
 
   .eco-card {
-    background: rgba(255,255,255,0.68);
+    background: rgba(255,252,248,0.58);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255,255,255,0.6);
-    box-shadow: 0 4px 20px -4px rgba(139,90,43,.07), inset 0 1px 0 rgba(255,255,255,0.9);
+    border: 1px solid rgba(139,90,43,0.16);
+    box-shadow: 0 2px 0 rgba(255,255,255,0.9) inset, 0 6px 28px -6px rgba(139,90,43,.12), 0 1px 3px rgba(139,90,43,.06);
     transition: all 400ms;
     position: relative;
     overflow: hidden;
@@ -130,14 +130,14 @@
     padding: 3px 8px;
     border-radius: 6px;
   }
-  .eco-card:hover { border-color: rgba(139,90,43,.15); }
+  .eco-card:hover { border-color: rgba(139,90,43,.28); box-shadow: 0 2px 0 rgba(255,255,255,1) inset, 0 12px 36px -8px rgba(139,90,43,.16); }
 
   .nav-glass {
-    background: rgba(255,255,255,0.82);
+    background: rgba(255,252,248,0.82);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255,255,255,0.7);
-    box-shadow: 0 1px 20px rgba(139,90,43,.06);
+    border-bottom: 1px solid rgba(139,90,43,0.14);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.9) inset, 0 2px 16px rgba(139,90,43,.08);
     transition: background 300ms, border-color 300ms;
   }
   .dark .nav-glass {
@@ -482,10 +482,23 @@ html.dark [class*="bg-orange-50"] { background: rgba(234,88,12,0.12) !important;
 /* Dividers */
 html.dark .stat-item::after { background: rgba(255,255,255,0.08) !important; }
 
-/* FAQ items */
+/* FAQ items — light + dark */
+.faq-item {
+  background: rgba(255,252,248,0.60);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(139,90,43,0.16);
+  box-shadow: 0 2px 0 rgba(255,255,255,0.9) inset, 0 4px 20px -4px rgba(139,90,43,.10);
+  transition: border-color 300ms, box-shadow 300ms;
+}
+.faq-item:hover {
+  border-color: rgba(139,90,43,0.28);
+  box-shadow: 0 2px 0 rgba(255,255,255,1) inset, 0 8px 28px -6px rgba(139,90,43,.14);
+}
 html.dark .faq-item {
   background: rgba(30,24,20,0.85) !important;
   border: 1px solid rgba(255,255,255,0.08) !important;
+  box-shadow: none !important;
 }
 html.dark .faq-item button { background: transparent !important; }
 
