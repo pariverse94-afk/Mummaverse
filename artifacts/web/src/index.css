@@ -36,36 +36,6 @@
     color: #F0E6DC;
   }
   .dark ::-webkit-scrollbar-track { background: #1a1614; }
-
-  /* ── Dark mode: override all hardcoded light-mode text colors ── */
-  /* Primary headings / dark brown → warm off-white */
-  .dark .text-\[#2C1810\] { color: #F0E6DC !important; }
-  /* Deep brown → lighter warm cream */
-  .dark .text-\[#4A3728\] { color: #DDD0C4 !important; }
-  /* Medium brown body text → muted warm light */
-  .dark .text-\[#6b5c50\] { color: #C4AD9C !important; }
-  /* Subdued label brown → softer light */
-  .dark .text-\[#8B7355\] { color: #A8917A !important; }
-  /* Faintest muted brown → stays similar, slight lift */
-  .dark .text-\[#9c8b7e\] { color: #B0A090 !important; }
-  /* Amber-brown labels (e.g. "Introducing") → saffron orange */
-  .dark .text-\[#92400E\] { color: #fb923c !important; }
-  /* Saddlebrown accent */
-  .dark .text-\[#8B4513\] { color: #fb923c !important; }
-
-  /* Borders that use light-brown tones */
-  .dark .border-\[#8B7355\]\/10 { border-color: rgba(255,255,255,0.07) !important; }
-  .dark .border-\[#8B7355\]\/20 { border-color: rgba(255,255,255,0.1) !important; }
-  .dark .border-orange-200\/50 { border-color: rgba(234,88,12,0.25) !important; }
-
-  /* Soft background pills / badges */
-  .dark .bg-orange-50\/50 { background: rgba(234,88,12,0.12) !important; }
-  .dark .bg-white\/60 { background: rgba(255,255,255,0.06) !important; }
-  .dark .bg-white\/70 { background: rgba(255,255,255,0.07) !important; }
-  .dark .bg-white\/80 { background: rgba(255,255,255,0.08) !important; }
-
-  /* Stat / divider lines */
-  .dark .stat-item::after { background: rgba(255,255,255,0.08) !important; }
 }
 
 @layer components {
@@ -482,3 +452,23 @@
   0% { height: 30%; }
   100% { height: 80%; }
 }
+
+/* ── Dark mode overrides (outside @layer so they beat all Tailwind utilities) ── */
+.dark .text-\[#2C1810\] { color: #F0E6DC; }
+.dark .text-\[#4A3728\] { color: #DDD0C4; }
+.dark .text-\[#6b5c50\] { color: #C4AD9C; }
+.dark .text-\[#8B7355\] { color: #A8917A; }
+.dark .text-\[#9c8b7e\] { color: #B0A090; }
+.dark .text-\[#92400E\] { color: #fb923c; }
+.dark .text-\[#8B4513\] { color: #fb923c; }
+
+.dark .border-\[#8B7355\]\/10 { border-color: rgba(255,255,255,0.07); }
+.dark .border-\[#8B7355\]\/20 { border-color: rgba(255,255,255,0.10); }
+.dark .border-orange-200\/50 { border-color: rgba(234,88,12,0.25); }
+
+.dark .bg-orange-50\/50 { background: rgba(234,88,12,0.12); }
+.dark .bg-white\/60 { background: rgba(255,255,255,0.06); }
+.dark .bg-white\/70 { background: rgba(255,255,255,0.07); }
+.dark .bg-white\/80 { background: rgba(255,255,255,0.08); }
+
+.dark .stat-item::after { background: rgba(255,255,255,0.08); }
