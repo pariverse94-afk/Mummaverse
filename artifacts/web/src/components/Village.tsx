@@ -85,7 +85,7 @@ export default function Village() {
               {TILES.map((tile, i) => (
                 <div
                   key={i}
-                  className={`rounded-2xl p-6 flex flex-col items-center text-center border ${i === 1 ? 'mt-6' : i === 2 ? '-mt-6' : i === 3 ? 'mt-6' : ''}`}
+                  className={`rounded-2xl p-6 flex flex-col items-center text-center border ${i === 1 ? 'sm:mt-6' : i === 2 ? 'sm:-mt-6' : i === 3 ? 'sm:mt-6' : ''}`}
                   style={{
                     background: `linear-gradient(135deg, ${tile.gradientFrom}, ${tile.gradientTo})`,
                     borderColor: tile.borderColor,

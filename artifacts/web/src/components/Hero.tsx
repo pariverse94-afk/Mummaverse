@@ -181,7 +181,7 @@ export default function Hero() {
 
             <p className="anim-in-d2 text-[15px] uppercase tracking-[.25em] text-orange-500 mb-4 font-semibold">Introducing</p>
 
-            <h1 className="hero-title leading-[.85] tracking-[-.04em] text-[16vw] md:text-[10vw] lg:text-[8rem] mb-5 text-[#2C1810]" style={{ fontFamily: "'Oswald', sans-serif", fontWeight: 500, textTransform: 'uppercase' }}>
+            <h1 className="hero-title leading-[.85] tracking-[-.04em] text-[11vw] sm:text-[12vw] md:text-[10vw] lg:text-[8rem] mb-5 text-[#2C1810]" style={{ fontFamily: "'Oswald', sans-serif", fontWeight: 500, textTransform: 'uppercase' }}>
               {LETTERS.map((l, i) => (
                 <span key={i}><em style={{ animationDelay: `${DELAYS[i]}s` }}>{l}</em></span>
               ))}
