@@ -1,0 +1,6 @@
+name = "pariverse-web"
+pages_build_output_dir = "artifacts/web/dist/public"
+compatibility_date = "2025-01-01"
+
+[build]
+command = "pnpm install && pnpm --filter @workspace/web run build"
