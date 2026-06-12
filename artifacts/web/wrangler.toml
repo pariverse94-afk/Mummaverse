@@ -1,3 +1,5 @@
 name = "pariverse-web"
-pages_build_output_dir = "dist/public"
 compatibility_date = "2025-01-01"
+
+[assets]
+directory = "./dist/public"
