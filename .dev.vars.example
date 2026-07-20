@@ -1,0 +1,6 @@
+# Template ONLY. Copy to `.dev.vars` for local `wrangler pages dev` runs.
+# `.dev.vars` is gitignored. This example file is safe to commit BECAUSE it
+# contains no real values — never paste your actual password in here.
+
+ADMIN_PASSWORD=choose-a-long-password-locally
+SESSION_SECRET=generate-32-plus-random-chars-see-CMS-SETUP.md

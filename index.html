@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Mummaverse by Pariverse — Chore-Sharing App for Indian Families</title>
+<meta name="description" content="Pariverse splits the kaam ka bojh fairly across the whole family — chores, meal planning, first aid and a mums' community. Built for India's nuclear families. Join the waitlist.">
+<link rel="canonical" href="https://mummaverse.in/">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="theme-color" content="#f8f0e5">
+<meta name="author" content="Pariverse">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Mummaverse">
+<meta property="og:locale" content="en_IN">
+<meta property="og:url" content="https://mummaverse.in/">
+<meta property="og:title" content="Mummaverse — Chore-Sharing for India's Nuclear Families">
+<meta property="og:description" content="The mental load isn't one person's job. Pariverse rotates chores, meals and midnight fevers across the whole family, fairly and automatically.">
+<meta property="og:image" content="https://mummaverse.in/assets/hero_kitchen_clean.jpg">
+<meta property="og:image:width" content="1376">
+<meta property="og:image:height" content="768">
+<meta property="og:image:alt" content="A sunlit Indian flat rendered as an interactive interface — a bookshelf of navigation tabs, a pressure cooker venting steam, and a floating phone showing the chore-split app.">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Mummaverse — Chore-Sharing for India's Nuclear Families">
+<meta name="twitter:description" content="The mental load isn't one person's job. Pariverse rotates chores, meals and midnight fevers across the whole family.">
+<meta name="twitter:image" content="https://mummaverse.in/assets/hero_kitchen_clean.jpg">
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/hero_kitchen_clean.jpg">
+<link rel="manifest" href="/site.webmanifest">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://mummaverse.in/#org",
+      "name": "Pariverse",
+      "alternateName": "Mummaverse",
+      "url": "https://mummaverse.in/",
+      "email": "pariverse94@gmail.com",
+      "logo": "https://mummaverse.in/assets/hero_kitchen_clean.jpg",
+      "areaServed": "IN"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://mummaverse.in/#website",
+      "url": "https://mummaverse.in/",
+      "name": "Mummaverse",
+      "publisher": { "@id": "https://mummaverse.in/#org" },
+      "inLanguage": "en-IN"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "name": "Pariverse",
+      "applicationCategory": "LifestyleApplication",
+      "operatingSystem": "Android, iOS",
+      "description": "A chore-sharing app that redistributes household work — chores, meal planning, first aid and community support — fairly across every member of the family.",
+      "featureList": ["Chore Split", "Meal Planner", "First Aid", "Mom Circle"],
+      "publisher": { "@id": "https://mummaverse.in/#org" },
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" }
+    }
+  ]
+}
+</script>
+
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; background:#f8f0e5; font-family:'Space Grotesk',sans-serif; }
+  a { color:#a8501a; text-decoration:none; }
+  a:hover { color:#7d3409; }
+  @keyframes twinkle { 0%,100%{ opacity:0.15;} 50%{ opacity:0.9;} }
+  @keyframes floaty { 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-10px);} }
+  @keyframes marquee { from{ transform:translateX(0);} to{ transform:translateX(-50%);} }
+  @keyframes hover3d { 0%,100%{ transform:translateY(0) rotate(0deg);} 50%{ transform:translateY(-0.7%) rotate(-0.25deg);} }
+  @keyframes steamPulse { 0%,100%{ opacity:0.28; transform:scale(1);} 50%{ opacity:0.62; transform:scale(1.06);} }
+  @keyframes tabGlow { 0%,100%{ box-shadow:0 0 1.2vw rgba(255,180,110,0.38), inset 0 0 0.9vw rgba(255,190,120,0.14);} 50%{ box-shadow:0 0 2vw rgba(255,190,125,0.6), inset 0 0 1.3vw rgba(255,200,140,0.24);} }
+  @keyframes scrollNudge { 0%,100%{ transform:translateY(0); opacity:0.55;} 50%{ transform:translateY(6px); opacity:1;} }
+  @keyframes glowPulse { 0%,100%{ box-shadow:0 0 40px 10px rgba(217,122,52,0.28);} 50%{ box-shadow:0 0 64px 18px rgba(217,122,52,0.42);} }
+  @keyframes blobNudge { 0%,86%,100%{ transform:rotate(0deg) scale(1);} 90%{ transform:rotate(-8deg) scale(1.07);} 94%{ transform:rotate(7deg) scale(1.07);} }
+  @keyframes pokeBadge { 0%,100%{ transform:translateX(0);} 50%{ transform:translateX(3px);} }
+
+  /* ── glass: every tappable card on the page shares this surface ──
+     translucent pane + blurred backdrop + a specular sweep that runs on hover,
+     so the card reads as a physical object you can press rather than a box */
+  .glass {
+    position:relative;
+    background:linear-gradient(152deg, rgba(255,255,255,0.78), rgba(255,247,236,0.44));
+    backdrop-filter:blur(14px) saturate(1.3);
+    -webkit-backdrop-filter:blur(14px) saturate(1.3);
+    border:1px solid rgba(255,255,255,0.8);
+    box-shadow:
+      0 6px 22px rgba(150,100,50,0.10),
+      inset 0 1px 0 rgba(255,255,255,0.95),
+      inset 0 -1px 0 rgba(214,170,120,0.22);
+    overflow:hidden;
+    -webkit-tap-highlight-color:transparent;
+    transition:transform 0.32s cubic-bezier(0.34,1.4,0.64,1), box-shadow 0.32s, border-color 0.32s, background 0.32s;
+  }
+  .glass::after {
+    content:''; position:absolute; inset:0; pointer-events:none;
+    background:linear-gradient(115deg, transparent 32%, rgba(255,255,255,0.6) 47%, transparent 63%);
+    transform:translateX(-125%);
+    transition:transform 0.75s cubic-bezier(0.4,0,0.2,1);
+  }
+  .glass:hover::after { transform:translateX(125%); }
+  .glass:hover {
+    transform:translateY(-4px);
+    border-color:rgba(240,164,94,0.9);
+    background:linear-gradient(152deg, rgba(255,255,255,0.9), rgba(255,244,229,0.6));
+    box-shadow:
+      0 18px 42px rgba(180,120,60,0.22),
+      inset 0 1px 0 rgba(255,255,255,1),
+      inset 0 -1px 0 rgba(214,170,120,0.3);
+  }
+  .glass:active { transform:translateY(-1px) scale(0.994); transition-duration:0.09s; }
+  .glass:focus-visible { outline:3px solid rgba(217,122,52,0.55); outline-offset:3px; }
+
+  /* ── store badges ── dark plates so they read as real store buttons
+     against the cream bar, rather than as two more page links */
+  .store-btn {
+    display:inline-flex; align-items:center; gap:9px; flex:none;
+    background:linear-gradient(180deg,#3a2618,#241812);
+    color:#fff4e4 !important; border:1px solid #4d3422;
+    padding:7px 15px; border-radius:9px; white-space:nowrap;
+    box-shadow:0 3px 10px rgba(60,35,15,0.24);
+    transition:transform 0.25s cubic-bezier(0.34,1.4,0.64,1), box-shadow 0.25s, background 0.25s;
+  }
+  .store-btn:hover {
+    transform:translateY(-2px); color:#ffffff !important;
+    background:linear-gradient(180deg,#4b3220,#302014);
+    box-shadow:0 9px 22px rgba(60,35,15,0.34);
+  }
+  .store-btn:active { transform:translateY(0); transition-duration:0.09s; }
+  .store-btn:focus-visible { outline:3px solid rgba(217,122,52,0.6); outline-offset:3px; }
+  .store-btn svg { width:19px; height:19px; fill:currentColor; flex:none; }
+  .store-btn .sb-sm { display:block; font-size:9px; line-height:1.2; letter-spacing:0.09em; text-transform:uppercase; opacity:0.82; }
+  .store-btn .sb-lg { display:block; font-size:14px; line-height:1.25; font-weight:700; letter-spacing:-0.01em; }
+
+  /* the photographic stage keeps the exact aspect of the hero render so every
+     percentage-positioned hotspot stays locked to the object it sits on */
+  .hero-stage { position:relative; width:100%; aspect-ratio:1376/768; overflow:hidden; background:#1a1210; }
+  .hero-mobile { display:none; }
+
+  @media (max-width: 900px) {
+    .hero-stage { aspect-ratio:4/5; }
+    .hero-ui { display:none; }
+    .hero-mobile { display:block; }
+    .grid-4 { grid-template-columns:repeat(2,1fr) !important; }
+    .grid-3 { grid-template-columns:1fr !important; }
+    .grid-2 { grid-template-columns:1fr !important; }
+    .pad-x { padding-left:22px !important; padding-right:22px !important; }
+    .row-3 { grid-template-columns:36px 1fr !important; }
+    .row-3 > div:last-child { grid-column:2; }
+    .h-big { font-size:36px !important; }
+    .stack { flex-direction:column; align-items:flex-start !important; gap:16px; }
+    /* the bar can't hold links + two badges + the CTA — badges win, they convert */
+    .nav-links { display:none !important; }
+    .nav-right { gap:10px !important; }
+    .store-btn { padding:7px 11px; gap:7px; }
+  }
+  @media (max-width: 620px) {
+    /* icon-only badges, so all three buttons still fit on a phone */
+    .store-btn .sb-tx { display:none; }
+    .store-btn { padding:9px 11px; }
+  }
+</style>
+</helmet>
+
+<div style="background:#f8f0e5; color:#2a1b13; min-height:100vh;">
+
+  <!-- ══════════ HERO: the flat, as an interface ══════════ -->
+  <div id="home" data-screen-label="Hero" onMouseMove="{{ onHeroMove }}" class="hero-stage">
+
+    <!-- the photograph. sits slightly oversized so parallax never exposes an edge -->
+    <div role="img" aria-label="A sunlit Indian flat rendered as an interactive interface: a wooden bookshelf whose spines carry glowing navigation tabs, a pressure cooker venting steam that forms the words Join the Waitlist, and a phone floating above the dining table showing the Pariverse chore-split screen." style="position:absolute; inset:-3%; background-image:url('assets/hero_kitchen_clean.jpg'); background-size:cover; background-position:52% center; transform:{{ bgTf }}; transition:transform 0.25s cubic-bezier(0.22,1,0.36,1);"></div>
+
+    <!-- golden-hour grade + corner vignette -->
+    <div style="position:absolute; inset:0; background:radial-gradient(ellipse 60% 70% at 78% 18%, rgba(255,196,120,0.22), transparent 62%), radial-gradient(ellipse 120% 90% at 50% 50%, transparent 52%, rgba(30,16,8,0.42) 100%); pointer-events:none;"></div>
+
+    <!-- ── interactive layer ── -->
+    <div class="hero-ui" style="position:absolute; inset:0; transform:{{ uiTf }}; transition:transform 0.25s cubic-bezier(0.22,1,0.36,1);">
+
+      <!-- wordmark, floated on the far wall above the doorway -->
+      <div style="position:absolute; left:20.5%; top:3.6%; width:36%;">
+        <h1 style="font-weight:700; font-size:2.7vw; line-height:1.02; margin:0; letter-spacing:0.01em; color:#fffaf2; -webkit-text-stroke:0.02vw #fffaf2; text-shadow:0 0.2vw 1.6vw rgba(20,10,4,0.95), 0 0 0.5vw rgba(20,10,4,0.7);">MUMMAVERSE</h1>
+        <div style="font-weight:700; font-size:0.92vw; letter-spacing:0.16em; color:#ffeeda; margin-top:0.6vw; line-height:1.4; text-shadow:0 0.12vw 1vw rgba(20,10,4,0.95), 0 0 0.3vw rgba(20,10,4,0.8);">PARIVERSE · CHORE-SHARING FOR INDIA'S NUCLEAR FAMILIES</div>
+      </div>
+
+      <!-- BOOKSHELF NAV — each tab sits on its own shelf, on top of the render -->
+      <sc-for list="{{ navTabs }}" as="t" hint-placeholder-count="3">
+        <div style="position:absolute; left:{{ t.x }}; top:{{ t.y }}; width:{{ t.w }}; height:{{ t.h }}; transform:rotate({{ t.rot }}); outline:{{ dbg }};">
+          <a href="{{ t.href }}" style="display:flex; align-items:center; gap:0.55vw; width:100%; height:100%; box-sizing:border-box; padding:0 0.85vw; border-radius:0.55vw; background:rgba(24,13,7,0.62); backdrop-filter:blur(3px); border:1px solid rgba(255,206,150,0.85); color:#ffe8ce; font-size:1.24vw; font-weight:600; letter-spacing:0.005em; white-space:nowrap; text-decoration:none; animation:tabGlow 4.5s ease-in-out infinite; animation-delay:{{ t.delay }}; transition:transform 0.3s cubic-bezier(0.34,1.4,0.64,1), background 0.3s, border-color 0.3s;" style-hover="transform:translateX(0.45vw) scale(1.045); background:rgba(48,26,13,0.88); border-color:rgba(255,228,190,1); color:#fff6e8;">
+            <span style="font-size:1.18vw; line-height:1;">{{ t.icon }}</span><span>{{ t.label }}</span>
+          </a>
+        </div>
+      </sc-for>
+
+      <!-- TESTIMONIALS — the render already draws this pill, so we only lay an invisible target over it -->
+      <a href="#testimonials" style="position:absolute; left:1.8%; top:58.8%; width:13.2%; height:8.6%; display:block; border-radius:0.6vw; cursor:pointer; text-decoration:none; outline:{{ dbg }}; transition:background 0.3s;" style-hover="background:radial-gradient(ellipse 70% 70% at 50% 50%, rgba(255,222,180,0.20), transparent 72%);"></a>
+
+      <!-- STEAM CTA — the plume already writes the words, so the steam itself is the button -->
+      <div onClick="{{ toggleWait }}" style="position:absolute; left:65.5%; top:1.5%; width:26%; height:24%; cursor:pointer; border-radius:1.2vw; outline:{{ dbg }};" style-hover="background:radial-gradient(ellipse 70% 70% at 50% 50%, rgba(255,232,205,0.14), transparent 70%);">
+        <div style="position:absolute; inset:-8%; border-radius:50%; background:radial-gradient(ellipse 60% 55% at 50% 50%, rgba(255,240,220,0.22), transparent 68%); animation:steamPulse 4.5s ease-in-out infinite; pointer-events:none;"></div>
+      </div>
+
+      <!-- …and the form condenses out of it -->
+      <div style="position:absolute; left:66.5%; top:24.5%; width:24.5%; display:{{ waitDisplay }};">
+        <div style="background:rgba(24,13,7,0.86); border:1px solid rgba(255,206,150,0.7); border-radius:0.6vw; padding:0.85vw; box-shadow:0 1vw 3vw rgba(20,10,4,0.55);">
+          <a href="{{ waitlistUrl }}" target="_blank" rel="noopener" style="display:block; text-align:center; background:linear-gradient(180deg,#f0a45e,#d97a34); color:#241812; font-weight:700; font-size:0.85vw; padding:0.7vw 0.9vw; border-radius:0.35vw; white-space:nowrap;">JOIN THE WAITLIST →</a>
+          <div style="font-size:0.62vw; color:rgba(255,224,190,0.7); margin-top:0.5vw; text-align:center;">{{ waitNote }}</div>
+        </div>
+      </div>
+
+      <!-- cue for the steam, shown until it's opened -->
+      <div style="position:absolute; left:68%; top:24.5%; width:22%; display:{{ cueDisplay }}; font-family:'Instrument Serif',serif; font-style:italic; font-size:1.35vw; line-height:1.3; color:#fff4e4; text-shadow:0 0.12vw 1.1vw rgba(20,10,4,0.95), 0 0 0.35vw rgba(20,10,4,0.85); pointer-events:none;">tap the steam — takes ten seconds ↑</div>
+
+      <!-- PHONE SCREEN — crisp product UI laid over the rendered handset -->
+      <div style="position:absolute; left:44.3%; top:35.3%; width:11.9%; height:50.4%; border-radius:0.55vw; overflow:hidden; background:linear-gradient(180deg,#fffaf3,#f4e8d8); box-shadow:inset 0 0 1vw rgba(120,80,40,0.14); animation:hover3d 6s ease-in-out infinite; outline:{{ dbg }};">
+        <div style="padding:0.55vw 0.6vw 0;">
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.42vw; color:#5c4636; letter-spacing:0.1em;"><span>9:41</span><span>PARIVERSE</span></div>
+          <div style="font-size:0.44vw; letter-spacing:0.16em; color:#5c4636; margin-top:0.5vw;">TUESDAY · THIS WEEK</div>
+          <div style="font-weight:700; font-size:0.75vw; color:#2a1b13; line-height:1.2; margin-top:0.15vw;">Good morning,<br>Priya</div>
+
+          <!-- fairness ring -->
+          <div style="display:flex; align-items:center; gap:0.55vw; margin-top:0.6vw;">
+            <div style="width:2.6vw; height:2.6vw; border-radius:50%; background:conic-gradient(#d97a34 0 62%, #b5657f 62% 84%, #e6d7c4 84% 100%); display:flex; align-items:center; justify-content:center; flex:none;">
+              <div style="width:1.85vw; height:1.85vw; border-radius:50%; background:#fffaf3; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                <div style="font-weight:700; font-size:0.62vw; color:#2a1b13; line-height:1;">62%</div>
+                <div style="font-size:0.32vw; color:#5c4636; letter-spacing:0.08em;">SPLIT</div>
+              </div>
+            </div>
+            <div style="min-width:0;">
+              <div style="font-size:0.46vw; font-weight:700; color:#2a1b13;">Load rebalanced</div>
+              <div style="font-size:0.4vw; color:#5c4636; line-height:1.35;">3 chores moved off you this week</div>
+            </div>
+          </div>
+
+          <div style="font-size:0.4vw; letter-spacing:0.16em; color:#5c4636; margin-top:0.7vw; margin-bottom:0.35vw;">ON THE ROSTER</div>
+          <sc-for list="{{ phoneRows }}" as="r" hint-placeholder-count="4">
+            <div style="display:flex; align-items:center; gap:0.4vw; margin-bottom:0.35vw;">
+              <div style="width:1vw; height:1vw; border-radius:50%; background:{{ r.color }}; display:flex; align-items:center; justify-content:center; font-size:0.5vw; flex:none;">{{ r.emoji }}</div>
+              <div style="flex:1; min-width:0;">
+                <div style="font-size:0.44vw; font-weight:600; color:#2a1b13; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ r.task }}</div>
+                <div style="height:0.2vw; background:#e6d7c4; border-radius:0.2vw; margin-top:0.15vw; overflow:hidden;"><div style="height:100%; width:{{ r.pct }}; background:{{ r.color }}; border-radius:0.2vw;"></div></div>
+              </div>
+              <div style="font-size:0.38vw; color:#5c4636; flex:none;">{{ r.who }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- STORE BADGES — real buttons, sat on the rendered holographic plates -->
+      <div style="position:absolute; left:31.4%; top:54.7%; width:11.9%; height:10.2%; transform:rotate(-1.4deg); outline:{{ dbg }};">
+        <a href="https://forms.gle/davzCPixvMJhS6C46" target="_blank" rel="noopener" style="display:flex; align-items:center; gap:0.5vw; width:100%; height:100%; box-sizing:border-box; padding:0 0.7vw; border-radius:0.5vw; background:rgba(24,13,7,0.8); border:1px solid rgba(255,206,150,0.85); color:#ffe8ce; text-decoration:none; box-shadow:0 0 1.6vw rgba(255,180,110,0.42); transition:transform 0.3s cubic-bezier(0.34,1.4,0.64,1), box-shadow 0.3s;" style-hover="transform:translateY(-0.35vw); box-shadow:0 0 2.6vw rgba(255,196,130,0.72);">
+          <span style="font-size:1.25vw; line-height:1;">&#63743;</span>
+          <span style="display:flex; flex-direction:column; line-height:1.15;"><span style="font-size:0.5vw; opacity:0.78; letter-spacing:0.05em;">Download on the</span><span style="font-size:0.92vw; font-weight:700;">App Store</span></span>
+        </a>
+      </div>
+      <div style="position:absolute; left:57.2%; top:59.4%; width:13.1%; height:9.8%; transform:rotate(1.2deg); outline:{{ dbg }};">
+        <a href="https://forms.gle/davzCPixvMJhS6C46" target="_blank" rel="noopener" style="display:flex; align-items:center; gap:0.5vw; width:100%; height:100%; box-sizing:border-box; padding:0 0.7vw; border-radius:0.5vw; background:rgba(24,13,7,0.8); border:1px solid rgba(255,206,150,0.85); color:#ffe8ce; text-decoration:none; box-shadow:0 0 1.6vw rgba(255,180,110,0.42); transition:transform 0.3s cubic-bezier(0.34,1.4,0.64,1), box-shadow 0.3s;" style-hover="transform:translateY(-0.35vw); box-shadow:0 0 2.6vw rgba(255,196,130,0.72);">
+          <span style="font-size:1.15vw; line-height:1;">&#9654;</span>
+          <span style="display:flex; flex-direction:column; line-height:1.15;"><span style="font-size:0.5vw; opacity:0.78; letter-spacing:0.05em;">GET IT ON</span><span style="font-size:0.92vw; font-weight:700;">Google Play</span></span>
+        </a>
+      </div>
+
+      <!-- background chore-pile callout -->
+      <div style="position:absolute; left:44%; top:19.5%; width:16%; text-align:center; pointer-events:none;">
+        <div style="font-weight:700; font-size:0.86vw; letter-spacing:0.16em; color:#ffeeda; text-shadow:0 0.12vw 1vw rgba(20,10,4,0.95), 0 0 0.3vw rgba(20,10,4,0.8);">THE NEVER-ENDING PILE</div>
+      </div>
+
+      <!-- scroll cue -->
+      <a href="#story" style="position:absolute; left:47%; top:92.5%; width:6%; text-align:center; font-size:0.62vw; letter-spacing:0.18em; color:rgba(255,232,206,0.9); text-decoration:none; animation:scrollNudge 2.4s ease-in-out infinite; text-shadow:0 0.1vw 0.8vw rgba(20,10,4,0.85);">SCROLL<br>↓</a>
+    </div>
+  </div>
+
+  <!-- mobile hero (the render can't carry fine UI at phone widths) -->
+  <div class="hero-mobile" style="padding:32px 22px 38px; background:linear-gradient(180deg,#241812,#3a2418);">
+    <div style="font-weight:700; font-size:20px; color:#fff2df; letter-spacing:0.01em;">MUMMAVERSE</div>
+    <div style="font-size:10.5px; letter-spacing:0.2em; color:rgba(255,224,190,0.75); margin:8px 0 22px;">PARIVERSE · CHORE-SHARING FOR INDIA'S NUCLEAR FAMILIES</div>
+    <div style="font-weight:700; font-size:38px; line-height:1.02; margin:0 0 10px; letter-spacing:-0.03em; color:#fff2df;">THE HOUSE<br>RUNS ITSELF.<br>NOT ON YOU.</div>
+    <div style="font-family:'Instrument Serif',serif; font-style:italic; font-size:24px; color:#f0a45e; margin-bottom:18px;">Join the waitlist.</div>
+    <a href="{{ waitlistUrl }}" target="_blank" rel="noopener" style="display:block; text-align:center; background:linear-gradient(180deg,#f0a45e,#d97a34); color:#241812; font-weight:700; font-size:16px; padding:15px 18px; border-radius:8px; white-space:nowrap;">JOIN THE WAITLIST →</a>
+  </div>
+
+  <!-- ══════════ sticky nav for the rest of the page ══════════ -->
+  <div style="position:sticky; top:0; z-index:40; display:flex; justify-content:space-between; align-items:center; padding:16px 56px; background:rgba(248,240,229,0.92); backdrop-filter:blur(10px); border-bottom:1px solid #e6d7c4;" class="pad-x">
+    <a href="#home" style="font-weight:700; font-size:18px; letter-spacing:-0.01em; color:#2a1b13;">MUMMAVERSE</a>
+    <div class="nav-right" style="display:flex; gap:24px; align-items:center; font-size:13px; letter-spacing:0.05em;">
+      <span class="nav-links" style="display:flex; gap:24px; align-items:center;"><a href="#story">OUR STORY</a><a href="#blog">BLOG</a><a href="#testimonials">TESTIMONIALS</a></span>
+
+      <a href="https://forms.gle/davzCPixvMJhS6C46" target="_blank" rel="noopener" class="store-btn" aria-label="Download Pariverse on the App Store">
+        <svg viewBox="0 0 384 512" aria-hidden="true" focusable="false"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+        <span class="sb-tx"><span class="sb-sm">Download on the</span><span class="sb-lg">App Store</span></span>
+      </a>
+
+      <a href="https://forms.gle/davzCPixvMJhS6C46" target="_blank" rel="noopener" class="store-btn" aria-label="Get Pariverse on Google Play">
+        <svg viewBox="0 0 512 512" aria-hidden="true" focusable="false"><path d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1zM47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0zm425.2 225.6l-58.9-34.1-65.7 64.5 65.7 64.5 60-34.1c18-14.3 18-46.5-1.1-60.8zM104.6 499l280.8-161.2-60.1-60.1L104.6 499z"/></svg>
+        <span class="sb-tx"><span class="sb-sm">Get it on</span><span class="sb-lg">Google Play</span></span>
+      </a>
+
+      <a href="https://forms.gle/davzCPixvMJhS6C46" target="_blank" rel="noopener" style="background:linear-gradient(180deg,#f0a45e,#d97a34); color:#241812; font-weight:700; padding:9px 18px; border-radius:6px; white-space:nowrap; flex:none;">JOIN THE WAITLIST</a>
+    </div>
+  </div>
+
+  <!-- savage marquee -->
+  <sc-if value="{{ showMarquee }}" hint-placeholder-val="{{ true }}">
+    <div style="overflow:hidden; border-bottom:1px solid #e6d7c4; padding:14px 0; background:#241812;">
+      <div style="display:flex; width:max-content; animation:marquee 24s linear infinite; white-space:nowrap;">
+        <div style="font-size:19px; font-weight:500; color:#f0a45e;">"WHERE IS MY BLUE SHIRT?" ✦ "WHAT'S FOR DINNER?" ✦ "MUMMA, SIGN THIS!" ✦ "I DIDN'T SEE THE MESS" ✦ "YOU'RE BETTER AT IT" ✦&nbsp;</div>
+        <div style="font-size:19px; font-weight:500; color:#f0a45e;">"WHERE IS MY BLUE SHIRT?" ✦ "WHAT'S FOR DINNER?" ✦ "MUMMA, SIGN THIS!" ✦ "I DIDN'T SEE THE MESS" ✦ "YOU'RE BETTER AT IT" ✦&nbsp;</div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ══════════ 01 · OUR STORY — the pile in the background, up close ══════════ -->
+  <div id="story" data-screen-label="Our Story" style="padding:76px 56px 66px; max-width:1200px; margin:0 auto;" class="pad-x">
+    <div style="font-size:18px; font-weight:700; letter-spacing:0.2em; color:#a8501a; margin-bottom:16px;">01 — OUR STORY</div>
+    <h2 style="font-weight:700; font-size:56px; line-height:1.05; margin:0 0 18px; letter-spacing:-0.025em;" class="h-big">THE PILE IN THE BACKGROUND</h2>
+    <p style="font-size:17px; line-height:1.65; color:#5c4636; max-width:620px; margin:0 0 40px;">In every warm, sunlit Indian flat there is a corner nobody photographs. Pariverse redistributes the kaam ka bojh — chores, meals, midnight fevers — across the whole family, fairly and automatically. Poke a chore. Every one of them has an excuse.</p>
+
+    <div style="border-left:3px solid #d97a34; padding:4px 0 4px 24px; margin:0 0 40px; max-width:560px;">
+      <div style="font-family:'Instrument Serif',serif; font-style:italic; font-size:27px; line-height:1.35; color:#2a1b13;">Escape isn't running away.<br>It's reclaiming your time.</div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px;" class="grid-3">
+      <sc-for list="{{ chores }}" as="c" hint-placeholder-count="6">
+        <div onClick="{{ c.onPoke }}" tabindex="0" class="glass" style="border-radius:16px; padding:22px; cursor:pointer; display:flex; align-items:center; gap:16px;">
+          <div style="width:66px; height:66px; flex:none; background:radial-gradient(circle at 32% 26%, rgba(255,255,255,0.6), rgba(255,255,255,0) 50%), {{ c.color }}; border-radius:46% 54% 58% 42% / 54% 46% 56% 44%; box-shadow:inset -6px -9px 18px rgba(120,70,30,0.2), 0 8px 20px rgba(150,100,50,0.18); display:flex; align-items:center; justify-content:center; transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1); transform:{{ c.tf }}; animation:{{ c.blobAnim }};">
+            <div style="font-size:30px; line-height:1;">{{ c.emoji }}</div>
+          </div>
+          <div style="min-width:0;">
+            <div style="font-weight:700; font-size:18px; margin-bottom:8px;">{{ c.label }}</div>
+            <div style="min-height:42px;">
+              <span style="display:{{ c.pokeShow }}; align-items:center; gap:6px; background:#fdefdd; border:1px solid #f0c894; color:#a8501a; font-size:12px; font-weight:700; letter-spacing:0.1em; padding:6px 11px; border-radius:999px;">👉 <span style="display:inline-block; animation:pokeBadge 1.6s ease-in-out infinite;">POKE ME</span></span>
+              <span style="display:{{ c.quipShow }}; font-size:14.5px; line-height:1.45; color:#5c4636;">{{ c.quip }}</span>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- ══════════ 02 · THE GREAT REBALANCE ══════════ -->
+  <div id="rebalance" data-screen-label="Rebalance" style="padding:20px 56px 70px; max-width:1200px; margin:0 auto;" class="pad-x">
+    <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px;" class="stack">
+      <div><div style="font-size:18px; font-weight:700; letter-spacing:0.2em; color:#a8501a; margin-bottom:16px;">02 — THE PROBLEM, VISUALISED</div>
+      <h2 style="font-weight:700; font-size:56px; line-height:1.05; margin:0; letter-spacing:-0.025em;" class="h-big">THE GREAT REBALANCE</h2></div>
+      <div onClick="{{ toggleBalance }}" style="background:{{ balanceBtnBg }}; color:{{ balanceBtnFg }}; border:1.5px solid #a8501a; font-weight:700; font-size:15px; letter-spacing:0.05em; padding:13px 26px; border-radius:6px; cursor:pointer; white-space:nowrap;">{{ balanceBtnText }}</div>
+    </div>
+    <div style="font-size:16px; color:#5c4636; margin-bottom:34px;">{{ balanceCaption }}</div>
+
+    <div style="overflow-x:auto; overflow-y:hidden;">
+    <div style="position:relative; height:420px; min-width:1088px; background:radial-gradient(ellipse 700px 300px at 50% 0%, rgba(217,122,52,0.22), transparent 70%), linear-gradient(180deg, #2e1d13, #241812); border-radius:16px; overflow:hidden;">
+      <div style="position:absolute; left:50%; bottom:60px; width:0; height:0; margin-left:-34px; border-left:34px solid transparent; border-right:34px solid transparent; border-bottom:64px solid #4a3220;"></div>
+      <div style="position:absolute; left:0; right:0; bottom:0; height:60px; border-top:1px solid #4a3220;"></div>
+
+      <div style="position:absolute; left:50%; bottom:118px; width:760px; height:10px; margin-left:-380px; background:#d97a34; border-radius:6px; transform:rotate({{ beamAngle }}); transition:transform 1s cubic-bezier(0.34,1.4,0.64,1); transform-origin:center;">
+        <div style="position:absolute; left:6px; top:-8px; width:150px; height:8px; background:#f4e3c8; border-radius:4px;"></div>
+        <div style="position:absolute; right:6px; top:-8px; width:150px; height:8px; background:#f4e3c8; border-radius:4px;"></div>
+        <div style="position:absolute; left:24px; top:14px; font-size:12px; font-weight:700; letter-spacing:0.1em; color:#f4e3c8;">MUMMA</div>
+        <div style="position:absolute; right:24px; top:14px; font-size:12px; font-weight:700; letter-spacing:0.1em; color:#f4e3c8;">EVERYONE ELSE</div>
+      </div>
+
+      <sc-for list="{{ chips }}" as="c" hint-placeholder-count="6">
+        <div style="position:absolute; left:{{ c.x }}; top:{{ c.y }}; transition:left 0.95s cubic-bezier(0.34,1.3,0.64,1), top 0.95s cubic-bezier(0.34,1.3,0.64,1); transition-delay:{{ c.delay }}; background:{{ c.color }}; color:#241812; font-weight:700; font-size:13.5px; padding:9px 15px; border-radius:999px; white-space:nowrap; box-shadow:0 6px 16px rgba(0,0,0,0.35);">{{ c.label }}</div>
+      </sc-for>
+
+      <div style="position:absolute; right:150px; bottom:135px; display:flex; gap:14px; align-items:flex-end;">
+        <div style="width:54px; height:54px; background:#b5657f; border-radius:46% 54% 58% 42% / 54% 46% 56% 44%; display:flex; align-items:center; justify-content:center; animation:floaty 4s ease-in-out infinite;"><div style="font-size:28px; line-height:1;">🧔🏽</div></div>
+        <div style="width:44px; height:44px; background:#e8b878; border-radius:56% 44% 48% 52% / 46% 54% 46% 54%; display:flex; align-items:center; justify-content:center; animation:floaty 4s ease-in-out infinite 0.6s;"><div style="font-size:23px; line-height:1;">👧🏽</div></div>
+        <div style="width:36px; height:36px; background:#c9714f; border-radius:44% 56% 56% 44% / 50% 50% 44% 56%; display:flex; align-items:center; justify-content:center; animation:floaty 4s ease-in-out infinite 1.2s;"><div style="font-size:19px; line-height:1;">👦🏽</div></div>
+      </div>
+
+      <div style="position:absolute; left:84px; bottom:{{ mummaLift }}; transition:bottom 1s cubic-bezier(0.34,1.4,0.64,1); width:64px; height:64px; background:#f0a45e; border-radius:48% 52% 55% 45% / 52% 48% 52% 48%; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+        <div style="font-size:30px; line-height:1;">{{ mummaFace }}</div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <!-- ══════════ 03 · THE USUAL SUSPECTS ══════════ -->
+  <div id="suspects" data-screen-label="Suspects" style="padding:20px 56px 70px; max-width:1200px; margin:0 auto;" class="pad-x">
+    <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:24px;" class="stack">
+      <div><div style="font-size:18px; font-weight:700; letter-spacing:0.2em; color:#a8501a; margin-bottom:16px;">03 — MEET THE HOUSEHOLD</div>
+      <h2 style="font-weight:700; font-size:56px; line-height:1.05; margin:0; letter-spacing:-0.025em;" class="h-big">THE USUAL SUSPECTS</h2></div>
+      <div style="font-size:14px; color:#5c4636; font-family:'Instrument Serif',serif; font-style:italic;">Poke to hear their excuse — then watch the app retire it.</div>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:16px;" class="grid-4">
+      <sc-for list="{{ suspects }}" as="b" hint-placeholder-count="4">
+        <div onClick="{{ b.onPoke }}" tabindex="0" class="glass" style="border-radius:16px; padding:26px 20px; cursor:pointer; text-align:center;">
+          <div style="width:74px; height:74px; margin:0 auto 14px; background:radial-gradient(circle at 32% 26%, rgba(255,255,255,0.6), rgba(255,255,255,0) 50%), {{ b.color }}; box-shadow:inset -6px -9px 18px rgba(120,70,30,0.2), 0 10px 24px rgba(150,100,50,0.18); border-radius:46% 54% 58% 42% / 54% 46% 56% 44%; display:flex; flex-direction:column; align-items:center; justify-content:center; transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1); transform:{{ b.tf }};">
+            <div style="font-size:34px; line-height:1;">{{ b.emoji }}</div>
+          </div>
+          <div style="font-weight:700; font-size:16px; margin-bottom:8px;">{{ b.label }}</div>
+          <div style="font-size:13.5px; line-height:1.45; color:#5c4636; min-height:56px;">{{ b.quip }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- ══════════ 04 · FEATURES ══════════ -->
+  <div id="features" data-screen-label="Features" style="padding:20px 56px 70px; max-width:1200px; margin:0 auto;" class="pad-x">
+    <div style="font-size:18px; font-weight:700; letter-spacing:0.2em; color:#a8501a; margin-bottom:16px;">04 — WHAT'S INSIDE</div>
+    <h2 style="font-weight:700; font-size:56px; line-height:1.05; margin:0 0 30px; letter-spacing:-0.025em;" class="h-big">FOUR TOOLS. ONE LIGHTER HOUSE.</h2>
+    <div style="border-top:1px solid #e6d7c4;">
+      <div style="display:grid; grid-template-columns:60px 1fr 1.4fr; gap:20px; padding:24px 0; border-bottom:1px solid #e6d7c4; align-items:baseline;" class="row-3"><div style="color:#a8501a; font-weight:700;">01</div><div style="font-weight:700; font-size:21px;">CHORE SPLIT</div><div style="color:#5c4636; font-size:15px;">Every kaam rotated fairly across the family — with a live scoreboard that settles arguments before they start.</div></div>
+      <div style="display:grid; grid-template-columns:60px 1fr 1.4fr; gap:20px; padding:24px 0; border-bottom:1px solid #e6d7c4; align-items:baseline;" class="row-3"><div style="color:#a8501a; font-weight:700;">02</div><div style="font-weight:700; font-size:21px;">MEAL PLANNER</div><div style="color:#5c4636; font-size:15px;">Weekly menus the whole family votes on, with auto-generated shopping lists. "Kuch bhi" is not on the ballot.</div></div>
+      <div style="display:grid; grid-template-columns:60px 1fr 1.4fr; gap:20px; padding:24px 0; border-bottom:1px solid #e6d7c4; align-items:baseline;" class="row-3"><div style="color:#a8501a; font-weight:700;">03</div><div style="font-weight:700; font-size:21px;">FIRST AID</div><div style="color:#5c4636; font-size:15px;">Paediatrician-reviewed guidance for fevers, scrapes and scares — clear steps at 2 AM, not panic-Googling.</div></div>
+      <div style="display:grid; grid-template-columns:60px 1fr 1.4fr; gap:20px; padding:24px 0; border-bottom:1px solid #e6d7c4; align-items:baseline;" class="row-3"><div style="color:#a8501a; font-weight:700;">04</div><div style="font-weight:700; font-size:21px;">MOM CIRCLE</div><div style="color:#5c4636; font-size:15px;">A moderated community of mums who get it — zero judgment, unlimited jugaad.</div></div>
+    </div>
+  </div>
+
+  <!-- ══════════ 05 · BLOG ══════════ -->
+  <div id="blog" data-screen-label="Blog" style="padding:20px 56px 80px; max-width:1200px; margin:0 auto;" class="pad-x">
+    <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:26px;" class="stack">
+      <div><div style="font-size:18px; font-weight:700; letter-spacing:0.2em; color:#a8501a; margin-bottom:16px;">05 — NOTES FROM THE KITCHEN</div>
+      <h2 style="font-weight:700; font-size:56px; line-height:1.05; margin:0; letter-spacing:-0.025em;" class="h-big">THE MUMMAVERSE BLOG</h2></div>
+      <a href="/blog/" style="font-size:14px; letter-spacing:0.05em; font-weight:700;">ALL POSTS →</a>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:18px;" class="grid-3">
+      <sc-for list="{{ posts }}" as="post" hint-placeholder-count="3">
+        <a href="{{ post.url }}" class="glass" style="display:block; border-radius:16px; color:#2a1b13;">
+          <div style="height:180px; background:{{ post.cover }}; display:flex; align-items:center; justify-content:center; position:relative;">
+            <div style="width:96px; height:96px; background:radial-gradient(circle at 32% 26%, rgba(255,255,255,0.55), rgba(255,255,255,0) 50%), {{ post.blobColor }}; border-radius:46% 54% 58% 42% / 54% 46% 56% 44%; box-shadow:inset -7px -10px 20px rgba(120,70,30,0.2), 0 14px 30px rgba(150,100,50,0.2); display:flex; align-items:center; justify-content:center; animation:floaty 5s ease-in-out infinite;">
+              <div style="font-size:44px; line-height:1;">{{ post.emoji }}</div>
+            </div>
+            <div style="position:absolute; top:14px; left:14px; background:rgba(36,24,18,0.72); backdrop-filter:blur(4px); color:#f0a45e; font-size:11px; font-weight:700; letter-spacing:0.14em; padding:6px 12px; border-radius:999px;">{{ post.tag }}</div>
+          </div>
+          <div style="padding:22px 22px 24px;">
+            <div style="font-weight:700; font-size:19px; line-height:1.3; margin-bottom:10px;">{{ post.title }}</div>
+            <div style="font-size:14px; line-height:1.55; color:#5c4636; margin-bottom:16px;">{{ post.excerpt }}</div>
+            <div style="display:flex; gap:10px; font-size:12.5px; color:#5c4636;"><span>{{ post.date }}</span><span>·</span><span>{{ post.mins }} min read</span></div>
+          </div>
+        </a>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- ══════════ testimonials + waitlist ══════════ -->
+  <div id="testimonials" data-screen-label="Testimonials" style="padding:0 56px 80px; max-width:1200px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:20px; align-items:stretch;" class="grid-2 pad-x">
+    <div style="background:#fffaf3; border:1px solid #e6d7c4; border-radius:16px; padding:36px;">
+      <div style="font-family:'Instrument Serif',serif; font-style:italic; font-size:40px; line-height:1.25; letter-spacing:-0.01em;">"I stopped being the manager of my own house."</div>
+      <div style="display:flex; align-items:center; gap:10px; margin-top:18px;"><div style="width:36px; height:36px; background:radial-gradient(circle at 32% 26%, #ffd9bc, #f0a45e); border-radius:46% 54% 58% 42% / 54% 46% 56% 44%; display:flex; align-items:center; justify-content:center; font-size:18px;">👩🏽</div><div style="font-size:13px; color:#5c4636;">Anita, Mumbai · early beta tester</div></div>
+    </div>
+    <div id="waitlist" style="background:linear-gradient(160deg, #f0a45e, #d97a34); color:#241812; border-radius:16px; padding:36px; display:flex; flex-direction:column; justify-content:center; animation:glowPulse 6s ease-in-out infinite;">
+      <div style="font-weight:700; font-size:36px; line-height:1.1; margin-bottom:10px; letter-spacing:-0.025em;">JOIN THE WAITLIST</div>
+      <div style="font-size:14px; margin-bottom:16px; opacity:0.82;">Launching soon on Google Play and the App Store.</div>
+      <a href="{{ waitlistUrl }}" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; justify-content:center; gap:10px; align-self:flex-start; background:#241812; color:#f0a45e; font-weight:700; font-size:17px; padding:16px 30px; border-radius:8px; white-space:nowrap; box-shadow:0 6px 18px rgba(60,35,15,0.28); transition:transform 0.25s cubic-bezier(0.34,1.4,0.64,1), box-shadow 0.25s;" style-hover="transform:translateY(-2px); box-shadow:0 12px 28px rgba(60,35,15,0.38);">JOIN THE WAITLIST →</a>
+      <div style="font-size:13px; margin-top:12px; opacity:0.78;">{{ waitNote }}</div>
+    </div>
+  </div>
+
+  <!-- footer -->
+  <div style="border-top:1px solid #e6d7c4; padding:28px 56px; display:flex; justify-content:space-between; font-size:13px; color:#5c4636;" class="pad-x stack">
+    <div>© 2026 PARIVERSE · <a href="mailto:pariverse94@gmail.com">pariverse94@gmail.com</a></div>
+    <div style="display:flex; gap:18px;"><a href="#home">INSTAGRAM</a><a href="#home">LINKEDIN</a><a href="#home">PRIVACY</a></div>
+  </div>
+</div>
+</x-dc>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="text/x-dc" data-dc-script data-props="{&quot;extraSavage&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Tone&quot;}, &quot;showMarquee&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Sections&quot;}, &quot;heroParallax&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Hero&quot;}, &quot;alignMode&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Hero&quot;}}">
+class Component extends DCLogic {
+  state = { pokes: {}, balanced: false, waitOpen: false, mx: 0, my: 0 };
+  _raf = null;
+
+  poke(id) {
+    this.setState(s => ({ pokes: { ...s.pokes, [id]: (s.pokes[id] || 0) + 1 } }));
+  }
+
+  mkBlob(id, label, quips, color, extra) {
+    const n = this.state.pokes[id] || 0;
+    const tfs = ['scale(1.22) rotate(-12deg)', 'scale(0.88) rotate(9deg)', 'scale(1.15) rotate(6deg) translateY(-6px)'];
+    return Object.assign({
+      label, color,
+      showQuip: n > 0,
+      quip: n > 0 ? quips[(n - 1) % quips.length] : '',
+      tf: n > 0 ? tfs[(n - 1) % 3] : 'none',
+      onPoke: () => this.poke(id),
+    }, extra || {});
+  }
+
+  renderVals() {
+    const savage = this.props.extraSavage ?? true;
+    const parallax = this.props.heroParallax ?? true;
+    // alignMode outlines every hero hotspot so overlay boxes can be fitted
+    // against the render without guessing at their bounds
+    const dbg = (this.props.alignMode ?? false) ? '2px solid #ff2ecc' : 'none';
+
+    // ── hero: bookshelf spines double as the nav. positions are % of the
+    // render, so every tab stays welded to its shelf at any viewport width.
+    const navTabs = [
+      { label: 'Home',         icon: '🏠', href: '#home',         x: '4.8%', y: '16.5%', w: '12.6%', h: '7.6%', rot: '-2.5deg', delay: '0s' },
+      { label: 'Our Story',    icon: '📖', href: '#story',        x: '4.8%', y: '28.5%', w: '12.6%', h: '7.6%', rot: '-2.5deg', delay: '0.5s' },
+      { label: 'Blog',         icon: '📰', href: '#blog',         x: '4.8%', y: '40.5%', w: '12.6%', h: '7.6%', rot: '-2.5deg', delay: '1s' },
+    ];
+
+    // the roster shown on the floating handset
+    const phoneRows = [
+      { task: 'Bartan, after dinner', who: 'Raj',   pct: '100%', color: '#d97a34', emoji: '🍽️' },
+      { task: 'Laundry → fold',  who: 'Aarav', pct: '70%',  color: '#b5657f', emoji: '🧺' },
+      { task: 'Sabzi run',            who: 'Raj',   pct: '45%',  color: '#e8b878', emoji: '🥕' },
+      { task: 'Tiffin prep',          who: 'Priya', pct: '30%',  color: '#c9714f', emoji: '🍱' },
+    ];
+
+    // ── the never-ending pile: one poke-able card per chore
+    const chores = [
+      this.mkBlob('bartan', 'bartan', savage
+        ? ['Bartan don’t have a mom. Wash them.', '“Soaking” ≠ washed, beta.']
+        : ['The sink misses everyone equally.', 'Teamwork makes the bartan clean.'],
+        '#f0a45e', { emoji: '🍽️' }),
+      this.mkBlob('laundry', 'laundry', savage
+        ? ['“I don’t know how the machine works” — a grown adult.', 'The basket is not a black hole.']
+        : ['One button. Anyone can.', 'Fold together, done faster.'],
+        '#b5657f', { emoji: '🧺' }),
+      this.mkBlob('homework', 'PTM forms', savage
+        ? ['Papa can also spell “photosynthesis”.', 'Signed by mumma. Again. Always.']
+        : ['Homework help, shared.', 'Two parents, one worksheet.'],
+        '#c9714f', { emoji: '📝' }),
+      this.mkBlob('sabzi', 'sabzi', savage
+        ? ['“Kuch bhi bana lo” is not a sabzi.', 'Decided by committee now. Sorry.']
+        : ['Tonight’s menu: a team decision.', 'Voting beats guessing.'],
+        '#e8b878', { emoji: '🥕' }),
+      this.mkBlob('jhadu', 'jhadu', savage
+        ? ['Found me! Behind the door. Since 2019.', 'I sweep. I don’t self-operate.']
+        : ['A little sweep a day…', 'Everyone can hold a jhadu.'],
+        '#d97a34', { emoji: '🧹' }),
+      this.mkBlob('tiffin', 'tiffin', savage
+        ? ['4 tiffins. 1 human. Do the math.', 'Packed with love & zero help.']
+        : ['Tiffin duty: rotates now.', 'Four boxes, four helpers.'],
+        '#dcc0a4', { emoji: '🍱' }),
+    ];
+    chores.forEach((c, i) => {
+      c.pokeShow  = c.showQuip ? 'none' : 'inline-flex';
+      c.quipShow  = c.showQuip ? 'inline' : 'none';
+      c.blobAnim  = c.showQuip ? 'none' : 'blobNudge 5s ease-in-out ' + (i * 0.4) + 's infinite';
+    });
+
+    const suspects = [
+      this.mkBlob('him', 'THE HUSBAND', savage
+        ? ['“Just tell me what to do.” — sir, the app will.', '“I helped yesterday.” It was March.']
+        : ['“Happy to help!” Now scheduled.'], '#d97a34', { emoji: '🧔🏽' }),
+      this.mkBlob('teen', 'THE TEEN', savage
+        ? ['“In 5 minutes.” Timezone: unknown.', 'Can find any meme. Cannot find the jhadu.']
+        : ['“Okay okay, doing it.”'], '#b5657f', { emoji: '🧑🏽' }),
+      this.mkBlob('kid', 'THE KID', savage
+        ? ['“I’m too small.” Not for the iPad though.', 'Negotiates chores like a lawyer.']
+        : ['Tiny hands, tiny chores.'], '#e8b878', { emoji: '👧🏽' }),
+      this.mkBlob('mumma', 'MUMMA', savage
+        ? ['Does it all. Asked for none of it.', 'Her only excuse: she never uses one.']
+        : ['Finally off duty. Sometimes.'], '#f0a45e', { emoji: '👩🏽' }),
+    ];
+    suspects.forEach((b, i) => {
+      if (!b.showQuip) b.quip = ['tap for his excuse', 'tap for the excuse', 'tap for the excuse', 'tap for the truth'][i];
+    });
+
+    // seesaw chips
+    const bal = this.state.balanced;
+    const chipDefs = [
+      { label: 'bartan', color: '#f0a45e' },
+      { label: 'jhadu', color: '#d97a34' },
+      { label: 'tiffin', color: '#dcc0a4' },
+      { label: 'laundry', color: '#b5657f' },
+      { label: 'PTM forms', color: '#c9714f' },
+      { label: 'sabzi', color: '#e8b878' },
+    ];
+    const stacked = [[150, 230], [230, 200], [155, 178], [240, 148], [175, 120], [255, 96]];
+    const spread = [[150, 200], [235, 200], [640, 200], [730, 185], [820, 200], [700, 148]];
+    const chips = chipDefs.map((c, i) => ({
+      label: c.label, color: c.color,
+      x: (bal ? spread[i][0] : stacked[i][0]) + 'px',
+      y: (bal ? spread[i][1] : stacked[i][1]) + 'px',
+      delay: (i * 0.07).toFixed(2) + 's',
+    }));
+
+    const posts = [
+      {
+        tag: 'MENTAL LOAD',
+        url: '/blog/the-invisible-to-do-list-is-still-a-to-do-list',
+        title: 'The invisible to-do list is still a to-do list',
+        excerpt: 'Remembering is work. Why the "manager of the house" role burns mums out — and how to actually hand it over.',
+        date: '28 Jun 2026', mins: 5,
+        emoji: '🧠', blobColor: '#b5657f',
+        cover: 'radial-gradient(ellipse 260px 160px at 30% 20%, rgba(181,101,127,0.28), transparent 70%), linear-gradient(160deg, #f6e6d6, #efdcc6)',
+      },
+      {
+        tag: 'FAIR PLAY',
+        url: '/blog/how-to-split-chores-without-starting-a-war',
+        title: 'How to split chores without starting a war',
+        excerpt: 'Rotation beats negotiation. A practical playbook for getting husbands, teens and 6-year-olds on the roster.',
+        date: '14 Jun 2026', mins: 4,
+        emoji: '⚖️', blobColor: '#d97a34',
+        cover: 'radial-gradient(ellipse 260px 160px at 70% 25%, rgba(217,122,52,0.26), transparent 70%), linear-gradient(160deg, #f8e9d5, #f0dcc2)',
+      },
+      {
+        tag: 'REAL TALK',
+        url: '/blog/maid-nahi-aayi-is-a-family-emergency-not-a-mumma-emergency',
+        title: '"Maid nahi aayi" is a family emergency, not a mumma emergency',
+        excerpt: 'What happens in Indian nuclear homes when the support system takes a day off — and who should absorb it.',
+        date: '02 Jun 2026', mins: 6,
+        emoji: '🪣', blobColor: '#e8b878',
+        cover: 'radial-gradient(ellipse 260px 160px at 45% 15%, rgba(232,184,120,0.34), transparent 70%), linear-gradient(160deg, #f7ead8, #efdfc8)',
+      },
+    ];
+
+    // hero parallax: photo drifts one way, the UI layer the other, so the
+    // overlaid interface reads as floating in front of the room.
+    const mx = parallax ? this.state.mx : 0;
+    const my = parallax ? this.state.my : 0;
+
+    return {
+      navTabs, phoneRows, chores, suspects, chips, posts, dbg,
+      showMarquee: this.props.showMarquee ?? true,
+
+      bgTf: 'scale(1.04) translate(' + (mx * -14) + 'px,' + (my * -9) + 'px)',
+      uiTf: 'translate(' + (mx * 9) + 'px,' + (my * 6) + 'px)',
+      onHeroMove: (e) => {
+        const el = e.currentTarget;
+        const cx = e.clientX, cy = e.clientY;
+        if (this._raf) return;
+        this._raf = requestAnimationFrame(() => {
+          this._raf = null;
+          const r = el.getBoundingClientRect();
+          this.setState({ mx: ((cx - r.left) / r.width - 0.5) * 2, my: ((cy - r.top) / r.height - 0.5) * 2 });
+        });
+      },
+
+      // the steam plume is the CTA — tapping it condenses the form below
+      toggleWait: () => this.setState(s => ({ waitOpen: !s.waitOpen })),
+      waitDisplay: this.state.waitOpen ? 'block' : 'none',
+      cueDisplay: this.state.waitOpen ? 'none' : 'block',
+      waitNote: 'No spam. Just the launch, and the odd excuse we’ve retired.',
+
+      // single source of truth for the waitlist — a Google Form, opened in a new tab
+      waitlistUrl: 'https://forms.gle/davzCPixvMJhS6C46',
+
+      beamAngle: bal ? '0deg' : '-8deg',
+      mummaLift: bal ? '195px' : '148px',
+      mummaFace: bal ? '😌' : '😮‍💨',
+      balanceBtnText: bal ? 'RESET TO PATRIARCHY' : 'RUN PARIVERSE',
+      balanceBtnBg: bal ? 'transparent' : '#a8501a',
+      balanceBtnFg: bal ? '#a8501a' : '#f8f0e5',
+      balanceCaption: bal
+        ? 'Load rebalanced. Beam level. Excuses: retired.'
+        : 'The current load distribution in most Indian households. Press the button to see what Pariverse does.',
+      toggleBalance: () => this.setState(s => ({ balanced: !s.balanced })),
+    };
+  }
+}
+</script>
+</body>
+</html>

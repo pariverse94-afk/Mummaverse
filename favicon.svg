@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#f8f0e5"/>
+  <!-- the blob shape used throughout the site, in the brand amber -->
+  <path d="M32 8c11 0 21 7 22 17s-6 21-16 26-22 3-27-6S8 24 16 15 21 8 32 8z"
+        fill="#d97a34"/>
+  <text x="32" y="42" text-anchor="middle"
+        font-family="Space Grotesk, Segoe UI, Helvetica, Arial, sans-serif"
+        font-size="26" font-weight="700" fill="#fffaf2">M</text>
+</svg>

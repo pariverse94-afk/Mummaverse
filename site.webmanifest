@@ -1,0 +1,13 @@
+{
+  "name": "Mummaverse by Pariverse",
+  "short_name": "Mummaverse",
+  "description": "Chore-sharing for India's nuclear families. Split the kaam ka bojh fairly.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8f0e5",
+  "theme_color": "#f8f0e5",
+  "lang": "en-IN",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

@@ -1,0 +1,13 @@
+name = "mummaverse"
+compatibility_date = "2026-01-01"
+pages_build_output_dir = "."
+
+# The blog's KV store. Replace the id below with the one Cloudflare gives you:
+#   npx wrangler kv namespace create BLOG_KV
+[[kv_namespaces]]
+binding = "BLOG_KV"
+id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
+
+# ADMIN_PASSWORD and SESSION_SECRET are NOT set here on purpose.
+# Add them as encrypted secrets in the Cloudflare dashboard so they never
+# touch the repo: Workers & Pages → your project → Settings → Variables → Secret.
