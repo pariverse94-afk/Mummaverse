@@ -6,7 +6,7 @@ pages_build_output_dir = "."
 #   npx wrangler kv namespace create BLOG_KV
 [[kv_namespaces]]
 binding = "BLOG_KV"
-id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
+id = "a02af48e04c445ac8a7c632641f8e20a"
 
 # ADMIN_PASSWORD and SESSION_SECRET are NOT set here on purpose.
 # Add them as encrypted secrets in the Cloudflare dashboard so they never
