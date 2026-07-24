@@ -1,4 +1,5 @@
-import { requireAuth, json, listPosts, getPost, putPost, slugify, readCookie, verifyToken } from '../_lib.js';
+import { requireAuth, json, listPosts, getPost, putPost, slugify, readCookie, verifyToken,
+         dataUrlToBytes, putImage, deleteImage } from '../_lib.js';
 
 // GET /api/posts — published posts. Drafts are included only for a signed-in editor.
 export async function onRequestGet(context) {
@@ -43,6 +44,21 @@ export async function onRequestPost(context) {
     createdAt: body.createdAt || now,
     updatedAt: now,
   };
+
+  // Cover image. A new data-URL replaces it; removeImage clears it; otherwise the
+  // client tells us whether one is already stored so we can carry the flag forward.
+  post.hasImage = !!body.hasImage;
+  if (body.removeImage) {
+    await deleteImage(context.env, slug);
+    post.hasImage = false;
+  } else if (typeof body.image === 'string' && body.image.startsWith('data:')) {
+    const img = dataUrlToBytes(body.image);
+    if (!img) return json({ error: 'The cover image could not be read.' }, 400);
+    if (!/^image\//.test(img.contentType)) return json({ error: 'That file is not an image.' }, 400);
+    if (img.bytes.length > 2_000_000) return json({ error: 'Cover image is too large — keep it under 2 MB.' }, 400);
+    await putImage(context.env, slug, img.contentType, img.bytes);
+    post.hasImage = true;
+  }
 
   await putPost(context.env, post);
   return json({ ok: true, post });

@@ -149,8 +149,37 @@ export function toMetadata(post) {
     mins: post.mins || 4,
     emoji: post.emoji || '📝',
     blobColor: post.blobColor || '#d97a34',
+    hasImage: !!post.hasImage,
     published: post.published !== false,
   };
+}
+
+/* ── cover images ────────────────────────────────────────────────────────────
+   Images are too big for KV metadata (1024-byte cap), so each lives under its
+   own key `image:<slug>`. The post keeps only a `hasImage` flag, which rides in
+   metadata so the blog index can still render every card from one list() call. */
+
+export function dataUrlToBytes(dataUrl) {
+  const m = /^data:([^;,]+);base64,([\s\S]+)$/.exec(dataUrl || '');
+  if (!m) return null;
+  const bin = atob(m[2]);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return { contentType: m[1], bytes };
+}
+
+export async function putImage(env, slug, contentType, bytes) {
+  await env.BLOG_KV.put('image:' + slug, bytes, { metadata: { contentType } });
+}
+
+export async function getImage(env, slug) {
+  const res = await env.BLOG_KV.getWithMetadata('image:' + slug, 'arrayBuffer');
+  if (!res || !res.value) return null;
+  return { bytes: res.value, contentType: (res.metadata && res.metadata.contentType) || 'application/octet-stream' };
+}
+
+export async function deleteImage(env, slug) {
+  await env.BLOG_KV.delete('image:' + slug);
 }
 
 export async function listPosts(env, { includeDrafts = false } = {}) {

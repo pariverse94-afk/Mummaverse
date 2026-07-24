@@ -137,8 +137,17 @@ Normal paragraphs. **Bold**, *italic*, `code`, and [links](https://example.com).
           <div class="field"><label for="tag" style="font-size:11px;">Tag</label><input id="tag" value="NOTES"></div>
           <div class="field"><label for="date" style="font-size:11px;">Date</label><input id="date" type="date"></div>
         </div>
+        <div class="field">
+          <label for="imageFile" style="font-size:11px;">Cover image</label>
+          <div id="imagePreviewWrap" style="display:none; margin-bottom:10px;">
+            <img id="imagePreview" alt="" style="width:100%; height:150px; object-fit:cover; border-radius:8px; border:1px solid #e0cbb0; display:block;">
+            <button type="button" class="ghost" id="removeImage" style="margin-top:8px; padding:7px 12px;">Remove image</button>
+          </div>
+          <input id="imageFile" type="file" accept="image/*">
+          <div class="hint">Shown on the blog card and at the top of the post. Auto-resized to 1280px wide; keep the original under ~8 MB. If empty, the emoji below is used instead.</div>
+        </div>
         <div class="row">
-          <div class="field"><label for="emoji" style="font-size:11px;">Emoji</label><input id="emoji" value="📝"></div>
+          <div class="field"><label for="emoji" style="font-size:11px;">Emoji (fallback)</label><input id="emoji" value="📝"></div>
           <div class="field"><label for="mins" style="font-size:11px;">Read (min)</label><input id="mins" type="number" min="1" max="60" placeholder="auto"></div>
         </div>
         <div class="field">
@@ -167,7 +176,38 @@ Normal paragraphs. **Bold**, *italic*, `code`, and [links](https://example.com).
 
 <script>
 const $ = id => document.getElementById(id);
-let current = null; // the post being edited, or null for a new one
+let current = null;          // the post being edited, or null for a new one
+let imageDataUrl = null;     // a freshly picked cover image, ready to upload
+let removeImageFlag = false; // set when the editor clears an existing image
+
+/* Downscale in the browser so we never ship a 6 MB phone photo to KV. */
+function readAndCompress(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const maxW = 1280;
+        const scale = Math.min(1, maxW / img.width);
+        const w = Math.round(img.width * scale), h = Math.round(img.height * scale);
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', 0.82));
+      };
+      img.onerror = reject;
+      img.src = reader.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+function showImagePreview(src) { $('imagePreview').src = src; $('imagePreviewWrap').style.display = 'block'; }
+function resetImageField() {
+  imageDataUrl = null; removeImageFlag = false;
+  $('imageFile').value = '';
+  $('imagePreviewWrap').style.display = 'none';
+}
 
 function slugify(s) {
   return (s || '').toLowerCase().replace(/['"’]/g, '').replace(/[^a-z0-9]+/g, '-')
@@ -248,6 +288,8 @@ window.edit = async slug => {
     $('del').style.display = 'inline-block';
     $('viewPost').style.display = 'inline-block';
     $('viewPost').href = '/blog/' + post.slug;
+    resetImageField();
+    if (post.hasImage) showImagePreview('/api/image/' + post.slug + '?t=' + Date.now());
     syncSlug(); countExcerpt();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   } catch (e) { flash(e.message, 'err'); }
@@ -261,6 +303,7 @@ $('newPost').onclick = () => {
   $('date').value = new Date().toISOString().slice(0, 10);
   $('del').style.display = 'none';
   $('viewPost').style.display = 'none';
+  resetImageField();
   syncSlug(); countExcerpt();
 };
 
@@ -277,6 +320,9 @@ async function save(allowOverwrite = false) {
     blobColor: $('blobColor').value,
     published: $('published').value === 'true',
     createdAt: current && current.createdAt,
+    image: imageDataUrl || undefined,
+    removeImage: removeImageFlag || undefined,
+    hasImage: !!(current && current.hasImage),
     allowOverwrite,
   };
   $('save').disabled = true;
@@ -286,6 +332,8 @@ async function save(allowOverwrite = false) {
     $('del').style.display = 'inline-block';
     $('viewPost').style.display = 'inline-block';
     $('viewPost').href = '/blog/' + post.slug;
+    resetImageField();
+    if (post.hasImage) showImagePreview('/api/image/' + post.slug + '?t=' + Date.now());
     flash(`Saved. Live at /blog/${post.slug}`);
     loadList();
   } catch (err) {
@@ -411,6 +459,23 @@ None of this is about domestic help being unreliable, or about blaming anyone fo
   }
   flash(`Seeded ${made} post${made === 1 ? '' : 's'}${skipped ? `, skipped ${skipped} that already existed` : ''}.`);
   loadList();
+};
+
+/* ── cover image ── */
+$('imageFile').onchange = async () => {
+  const file = $('imageFile').files[0];
+  if (!file) return;
+  try {
+    imageDataUrl = await readAndCompress(file);
+    removeImageFlag = false;
+    showImagePreview(imageDataUrl);
+  } catch { flash('Could not read that image.', 'err'); }
+};
+$('removeImage').onclick = () => {
+  imageDataUrl = null;
+  removeImageFlag = true;
+  $('imageFile').value = '';
+  $('imagePreviewWrap').style.display = 'none';
 };
 
 /* ── small niceties ── */

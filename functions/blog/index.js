@@ -8,8 +8,10 @@ export async function onRequestGet(context) {
   const cards = posts.length ? posts.map(p => `
     <a class="glass" href="/blog/${escapeHtml(p.slug)}">
       <div class="cover" style="background:radial-gradient(ellipse 260px 160px at 40% 25%, ${escapeHtml(p.blobColor || '#d97a34')}44, transparent 70%), linear-gradient(160deg,#f6e6d6,#efdcc6); position:relative;">
-        <span style="position:absolute; top:14px; left:14px;" class="pill">${escapeHtml(p.tag || 'NOTES')}</span>
-        <span>${escapeHtml(p.emoji || '📝')}</span>
+        <span style="position:absolute; top:14px; left:14px; z-index:1;" class="pill">${escapeHtml(p.tag || 'NOTES')}</span>
+        ${p.hasImage
+          ? `<img src="/api/image/${escapeHtml(p.slug)}" alt="" loading="lazy" style="width:100%; height:100%; object-fit:cover;">`
+          : `<span>${escapeHtml(p.emoji || '📝')}</span>`}
       </div>
       <div style="padding:22px 22px 24px;">
         <div style="font-weight:700; font-size:19px; line-height:1.3; margin-bottom:10px;">${escapeHtml(p.title)}</div>

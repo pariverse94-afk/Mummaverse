@@ -42,6 +42,7 @@ export async function onRequestGet(context) {
       <h1>${escapeHtml(post.title)}</h1>
       <p class="meta" style="margin:0 0 8px;">${escapeHtml(post.date || '')} &middot; ${escapeHtml(String(post.mins || 4))} min read</p>
       ${post.excerpt ? `<p style="font-size:21px; line-height:1.55; color:#5c4636; margin:20px 0 0;">${escapeHtml(post.excerpt)}</p>` : ''}
+      ${post.hasImage ? `<img src="/api/image/${escapeHtml(post.slug)}" alt="${escapeHtml(post.title)}" style="width:100%; border-radius:16px; margin:28px 0 0; display:block;">` : ''}
       <hr style="border:none; border-top:1px solid #e6d7c4; margin:32px 0;">
       ${renderMarkdown(post.body)}
     </article>
@@ -53,6 +54,7 @@ export async function onRequestGet(context) {
     title: `${post.title} — Mummaverse`,
     description: post.excerpt || post.title,
     canonical: `${SITE.origin}/blog/${post.slug}`,
+    ogImage: post.hasImage ? `${SITE.origin}/api/image/${post.slug}` : undefined,
     body,
     jsonLd: {
       '@context': 'https://schema.org',

@@ -1,4 +1,4 @@
-import { requireAuth, json, getPost } from '../../_lib.js';
+import { requireAuth, json, getPost, deleteImage } from '../../_lib.js';
 
 // GET /api/posts/:slug — used by the editor to load a post for editing
 export async function onRequestGet(context) {
@@ -13,5 +13,6 @@ export async function onRequestDelete(context) {
   if (denied) return denied;
 
   await context.env.BLOG_KV.delete('post:' + context.params.slug);
+  await deleteImage(context.env, context.params.slug);
   return json({ ok: true });
 }
