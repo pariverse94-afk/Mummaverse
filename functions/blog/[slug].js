@@ -58,14 +58,26 @@ export async function onRequestGet(context) {
     body,
     jsonLd: {
       '@context': 'https://schema.org',
-      '@type': 'BlogPosting',
-      headline: post.title,
-      description: post.excerpt || '',
-      datePublished: post.date,
-      dateModified: (post.updatedAt || '').slice(0, 10) || post.date,
-      mainEntityOfPage: `${SITE.origin}/blog/${post.slug}`,
-      author: { '@type': 'Organization', name: 'Pariverse' },
-      publisher: { '@type': 'Organization', name: 'Pariverse', url: SITE.origin + '/' },
+      '@graph': [
+        {
+          '@type': 'BlogPosting',
+          headline: post.title,
+          description: post.excerpt || '',
+          datePublished: post.date,
+          dateModified: (post.updatedAt || '').slice(0, 10) || post.date,
+          mainEntityOfPage: `${SITE.origin}/blog/${post.slug}`,
+          author: { '@type': 'Organization', name: 'Pariverse' },
+          publisher: { '@type': 'Organization', name: 'Pariverse', url: SITE.origin + '/' },
+        },
+        {
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: SITE.origin + '/' },
+            { '@type': 'ListItem', position: 2, name: 'Blog', item: SITE.origin + '/blog/' },
+            { '@type': 'ListItem', position: 3, name: post.title, item: `${SITE.origin}/blog/${post.slug}` },
+          ],
+        },
+      ],
     },
   }), 200, { 'Cache-Control': 'public, max-age=60' });
 }

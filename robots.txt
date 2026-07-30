@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /wrangler.toml
+Disallow: /CMS-SETUP.md
+Disallow: /CLAUDE.md
+Disallow: /SEO_STRATEGY.md
 
 Sitemap: https://mummaverse.in/sitemap.xml

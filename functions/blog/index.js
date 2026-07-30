@@ -25,7 +25,7 @@ export async function onRequestGet(context) {
 
   const body = `
   <main class="wrap wide" style="padding-top:56px;">
-    <div class="eyebrow">NOTES FROM THE KITCHEN</div>
+    <div class="eyebrow">SHARING THE MENTAL LOAD</div>
     <h1 style="font-size:56px; line-height:1.05; letter-spacing:-0.025em; margin:14px 0 12px;">THE MUMMAVERSE BLOG</h1>
     <p style="font-size:18px; color:#5c4636; max-width:60ch; margin:0 0 40px;">On the mental load, splitting chores without starting a war, and running an Indian home without one person carrying all of it.</p>
     <div class="grid">${cards}</div>
@@ -36,6 +36,7 @@ export async function onRequestGet(context) {
     title: 'The Mummaverse Blog — Notes on the Mental Load',
     description: 'Essays on the mental load, fair chore splits and running an Indian home without one person carrying all of it.',
     canonical: SITE.origin + '/blog/',
+    ogType: 'website',
     body,
     jsonLd: {
       '@context': 'https://schema.org',

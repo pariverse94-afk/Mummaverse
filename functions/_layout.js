@@ -111,7 +111,7 @@ const STYLES = `
   }
 `;
 
-export function page({ title, description, canonical, body, ogImage, jsonLd }) {
+export function page({ title, description, canonical, body, ogImage, jsonLd, ogType = 'article' }) {
   return `<!DOCTYPE html>
 <html lang="en-IN">
 <head>
@@ -121,7 +121,7 @@ export function page({ title, description, canonical, body, ogImage, jsonLd }) {
 <meta name="description" content="${escapeHtml(description)}">
 <link rel="canonical" href="${escapeHtml(canonical)}">
 <meta name="theme-color" content="#f8f0e5">
-<meta property="og:type" content="article">
+<meta property="og:type" content="${escapeHtml(ogType)}">
 <meta property="og:site_name" content="${SITE.name}">
 <meta property="og:title" content="${escapeHtml(title)}">
 <meta property="og:description" content="${escapeHtml(description)}">
