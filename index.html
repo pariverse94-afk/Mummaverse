@@ -432,11 +432,16 @@
     <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:18px;" class="grid-3">
       <sc-for list="{{ posts }}" as="post" hint-placeholder-count="3">
         <a href="{{ post.url }}" class="glass" style="display:block; border-radius:16px; color:#2a1b13;">
-          <div style="height:180px; background:{{ post.cover }}; display:flex; align-items:center; justify-content:center; position:relative;">
-            <div style="width:96px; height:96px; background:radial-gradient(circle at 32% 26%, rgba(255,255,255,0.55), rgba(255,255,255,0) 50%), {{ post.blobColor }}; border-radius:46% 54% 58% 42% / 54% 46% 56% 44%; box-shadow:inset -7px -10px 20px rgba(120,70,30,0.2), 0 14px 30px rgba(150,100,50,0.2); display:flex; align-items:center; justify-content:center; animation:floaty 5s ease-in-out infinite;">
-              <div style="font-size:44px; line-height:1;">{{ post.emoji }}</div>
-            </div>
-            <div style="position:absolute; top:14px; left:14px; background:rgba(36,24,18,0.72); backdrop-filter:blur(4px); color:#f0a45e; font-size:11px; font-weight:700; letter-spacing:0.14em; padding:6px 12px; border-radius:999px;">{{ post.tag }}</div>
+          <div style="height:180px; background:{{ post.cover }}; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;">
+            <sc-if value="{{ post.hasImage }}">
+              <img src="{{ post.imageUrl }}" alt="" loading="lazy" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;">
+            </sc-if>
+            <sc-if value="{{ post.noImage }}">
+              <div style="width:96px; height:96px; background:radial-gradient(circle at 32% 26%, rgba(255,255,255,0.55), rgba(255,255,255,0) 50%), {{ post.blobColor }}; border-radius:46% 54% 58% 42% / 54% 46% 56% 44%; box-shadow:inset -7px -10px 20px rgba(120,70,30,0.2), 0 14px 30px rgba(150,100,50,0.2); display:flex; align-items:center; justify-content:center; animation:floaty 5s ease-in-out infinite;">
+                <div style="font-size:44px; line-height:1;">{{ post.emoji }}</div>
+              </div>
+            </sc-if>
+            <div style="position:absolute; top:14px; left:14px; z-index:1; background:rgba(36,24,18,0.72); backdrop-filter:blur(4px); color:#f0a45e; font-size:11px; font-weight:700; letter-spacing:0.14em; padding:6px 12px; border-radius:999px;">{{ post.tag }}</div>
           </div>
           <div style="padding:22px 22px 24px;">
             <div style="font-weight:700; font-size:19px; line-height:1.3; margin-bottom:10px;">{{ post.title }}</div>
@@ -506,6 +511,8 @@ class Component extends DCLogic {
           mins: p.mins || 4,
           emoji: p.emoji || '📝',
           blobColor: p.blobColor || '#d97a34',
+          hasImage: !!p.hasImage,
+          imageUrl: '/api/image/' + p.slug,
           cover: 'radial-gradient(ellipse 260px 160px at 40% 20%, ' + rgba(p.blobColor, 0.28) + ', transparent 70%), linear-gradient(160deg, #f7e9d7, #efdcc6)',
         }));
         this.setState({ livePosts });
@@ -650,7 +657,10 @@ class Component extends DCLogic {
         cover: 'radial-gradient(ellipse 260px 160px at 45% 15%, rgba(232,184,120,0.34), transparent 70%), linear-gradient(160deg, #f7ead8, #efdfc8)',
       },
     ];
-    const posts = (this.state.livePosts && this.state.livePosts.length) ? this.state.livePosts : fallbackPosts;
+    // sc-if has no else, so each card needs both flags set explicitly — an
+    // absent hasImage would otherwise skip the emoji branch too and render blank.
+    const posts = ((this.state.livePosts && this.state.livePosts.length) ? this.state.livePosts : fallbackPosts)
+      .map(p => ({ ...p, hasImage: !!p.hasImage, noImage: !p.hasImage }));
 
     // hero parallax: photo drifts one way, the UI layer the other, so the
     // overlaid interface reads as floating in front of the room.
