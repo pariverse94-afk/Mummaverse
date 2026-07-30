@@ -425,7 +425,7 @@
   <!-- ══════════ 05 · BLOG ══════════ -->
   <div id="blog" data-screen-label="Blog" style="padding:20px 56px 80px; max-width:1200px; margin:0 auto;" class="pad-x">
     <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:26px;" class="stack">
-      <div><div style="font-size:18px; font-weight:700; letter-spacing:0.2em; color:#a8501a; margin-bottom:16px;">05 — NOTES FROM THE KITCHEN</div>
+      <div><div style="font-size:18px; font-weight:700; letter-spacing:0.2em; color:#a8501a; margin-bottom:16px;">05 — LATEST POSTS</div>
       <h2 style="font-weight:700; font-size:56px; line-height:1.05; margin:0; letter-spacing:-0.025em;" class="h-big">THE MUMMAVERSE BLOG</h2></div>
       <a href="/blog/" style="font-size:14px; letter-spacing:0.05em; font-weight:700;">ALL POSTS →</a>
     </div>
@@ -476,6 +476,41 @@ class Component extends DCLogic {
 
   poke(id) {
     this.setState(s => ({ pokes: { ...s.pokes, [id]: (s.pokes[id] || 0) + 1 } }));
+  }
+
+  // Pull the three newest published posts from the blog so the home cards track
+  // what's actually live. listPosts already returns them newest-first; we just
+  // reshape each into the card fields the template below expects.
+  componentDidMount() {
+    fetch('/api/posts')
+      .then(r => (r.ok ? r.json() : null))
+      .then(d => {
+        if (!d || !Array.isArray(d.posts) || !d.posts.length) return;
+        const mon = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        const fmtDate = iso => {
+          const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso || '');
+          return m ? (+m[3]) + ' ' + mon[+m[2] - 1] + ' ' + m[1] : (iso || '');
+        };
+        const rgba = (hex, a) => {
+          let h = (hex || '#d97a34').replace('#', '');
+          if (h.length === 3) h = h.split('').map(c => c + c).join('');
+          const n = parseInt(h, 16);
+          return 'rgba(' + ((n >> 16) & 255) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')';
+        };
+        const livePosts = d.posts.slice(0, 3).map(p => ({
+          tag: p.tag || 'NOTES',
+          url: '/blog/' + p.slug,
+          title: p.title || '',
+          excerpt: p.excerpt || '',
+          date: fmtDate(p.date),
+          mins: p.mins || 4,
+          emoji: p.emoji || '📝',
+          blobColor: p.blobColor || '#d97a34',
+          cover: 'radial-gradient(ellipse 260px 160px at 40% 20%, ' + rgba(p.blobColor, 0.28) + ', transparent 70%), linear-gradient(160deg, #f7e9d7, #efdcc6)',
+        }));
+        this.setState({ livePosts });
+      })
+      .catch(() => {});
   }
 
   mkBlob(id, label, quips, color, extra) {
@@ -583,7 +618,10 @@ class Component extends DCLogic {
       delay: (i * 0.07).toFixed(2) + 's',
     }));
 
-    const posts = [
+    // The home page shows the three newest published posts, fetched live in
+    // componentDidMount. Until that resolves (and if the API ever fails) these
+    // hand-written cards stand in so the section is never empty.
+    const fallbackPosts = [
       {
         tag: 'MENTAL LOAD',
         url: '/blog/the-invisible-to-do-list-is-still-a-to-do-list',
@@ -612,6 +650,7 @@ class Component extends DCLogic {
         cover: 'radial-gradient(ellipse 260px 160px at 45% 15%, rgba(232,184,120,0.34), transparent 70%), linear-gradient(160deg, #f7ead8, #efdfc8)',
       },
     ];
+    const posts = (this.state.livePosts && this.state.livePosts.length) ? this.state.livePosts : fallbackPosts;
 
     // hero parallax: photo drifts one way, the UI layer the other, so the
     // overlaid interface reads as floating in front of the room.
