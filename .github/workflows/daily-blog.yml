@@ -1,0 +1,38 @@
+name: Daily blog
+
+on:
+  schedule:
+    # 03:30 UTC ≈ 09:00 IST, daily. Edit to change time/cadence.
+    - cron: "30 3 * * *"
+  workflow_dispatch: {}   # lets you trigger a run manually from the Actions tab
+
+permissions:
+  contents: read
+
+concurrency:
+  group: daily-blog
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install deps
+        working-directory: automation
+        run: npm install --no-audit --no-fund
+
+      - name: Generate and publish a post
+        working-directory: automation
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          SITE_URL: ${{ vars.SITE_URL }}
+          PUBLISH_LIVE: ${{ vars.PUBLISH_LIVE }}
+        run: node generate-post.js

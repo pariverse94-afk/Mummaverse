@@ -3,6 +3,11 @@
 .dev.vars.*
 !.dev.vars.example
 
+# Local secrets for the automation script. NEVER commit these.
+.env
+**/.env
+!**/.env.example
+
 # Cloudflare / build
 .wrangler/
 node_modules/

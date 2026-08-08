@@ -1,0 +1,13 @@
+{
+  "name": "mummaverse-daily-blog",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Daily SEO blog generator for mummaverse.in (Sonnet -> admin API).",
+  "scripts": {
+    "start": "node generate-post.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "latest"
+  }
+}
