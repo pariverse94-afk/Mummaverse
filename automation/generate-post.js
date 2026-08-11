@@ -9,14 +9,20 @@
 // same authenticated admin endpoints the /admin editor uses, so all the server
 // side slug/metadata/validation logic is reused.
 //
-// Credentials come from the environment (never hardcode): ANTHROPIC_API_KEY,
-// ADMIN_PASSWORD, PEXELS_API_KEY, plus optional SITE_URL / PUBLISH_LIVE.
+// Generation runs through the Claude Code CLI (`claude`), so the job bills
+// against a Claude Pro/Max subscription rather than a metered API key.
+//
+// Credentials come from the environment (never hardcode): CLAUDE_CODE_OAUTH_TOKEN
+// (subscription token from `claude setup-token`), ADMIN_PASSWORD, PEXELS_API_KEY,
+// plus optional SITE_URL / PUBLISH_LIVE.
 
-import Anthropic from '@anthropic-ai/sdk';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
 
+const execFileAsync = promisify(execFile);
 const HERE = dirname(fileURLToPath(import.meta.url));
 
 const SITE_URL = (process.env.SITE_URL || 'https://mummaverse.in').replace(/\/$/, '');
@@ -27,15 +33,20 @@ const PUBLISH_LIVE = String(process.env.PUBLISH_LIVE || 'false').toLowerCase() =
 // The user chose Sonnet for generation. Pin it here so it's easy to change.
 const MODEL = 'claude-sonnet-5';
 
+// The Claude Code CLI. Generation shells out to it so usage draws on the Claude
+// subscription (authenticated by CLAUDE_CODE_OAUTH_TOKEN) instead of an API key.
+// Override CLAUDE_BIN only if the binary isn't named `claude` on PATH.
+const CLAUDE_BIN = process.env.CLAUDE_BIN || 'claude';
+
 function die(msg) {
   console.error('✗ ' + msg);
   process.exit(1);
 }
 
-if (!process.env.ANTHROPIC_API_KEY) die('ANTHROPIC_API_KEY is not set.');
 if (!ADMIN_PASSWORD) die('ADMIN_PASSWORD is not set.');
-
-const anthropic = new Anthropic(); // reads ANTHROPIC_API_KEY from the environment
+if (!process.env.CLAUDE_CODE_OAUTH_TOKEN) {
+  console.warn('! CLAUDE_CODE_OAUTH_TOKEN not set — falling back to an existing local `claude` login. In CI this secret must be set.');
+}
 
 /* ── admin API ──────────────────────────────────────────────────────────── */
 
@@ -115,23 +126,11 @@ DO NOT add an app download / store / waitlist call-to-action in the body — the
 
 Return the fields requested. imageQuery: 2-4 plain words for a stock-photo search that would make a relevant, tasteful cover (e.g. "indian family kitchen", "mother laptop home") — no text, no logos.`;
 
-const SCHEMA = {
-  type: 'object',
-  additionalProperties: false,
-  properties: {
-    title: { type: 'string' },
-    slug: { type: 'string' },
-    tag: { type: 'string' },
-    excerpt: { type: 'string' },
-    emoji: { type: 'string' },
-    blobColor: { type: 'string' },
-    imageQuery: { type: 'string' },
-    body: { type: 'string' },
-  },
-  required: ['title', 'slug', 'tag', 'excerpt', 'emoji', 'blobColor', 'imageQuery', 'body'],
-};
+// Exact JSON keys the model must return. Enforced in the prompt (the CLI returns
+// free text) and re-checked after parsing.
+const FIELDS = ['title', 'slug', 'tag', 'excerpt', 'emoji', 'blobColor', 'imageQuery', 'body'];
 
-async function generatePost(topic, existing) {
+function buildUserPrompt(topic, existing) {
   const linkList = existing
     .filter(p => p.published !== false)
     .slice(0, 12)
@@ -149,27 +148,71 @@ async function generatePost(topic, existing) {
 - Emoji: ${topic.emoji}  Accent hex: ${topic.blobColor}`
     : `All planned topics are used. Propose a FRESH India-specific long-tail keyword about the mental load / sharing household chores / running an Indian home that does NOT overlap the existing titles below, and write that post. Pick your own tag, emoji, and a warm accent hex.`;
 
-  const msg = await anthropic.messages.create({
-    model: MODEL,
-    max_tokens: 16000,
-    system: SYSTEM_PROMPT,
-    output_config: { effort: 'medium', format: { type: 'json_schema', schema: SCHEMA } },
-    messages: [{
-      role: 'user',
-      content: `${brief}
+  return `${brief}
 
 EXISTING POST TITLES (do not duplicate these topics):
 ${titles}
 
 POSTS YOU MAY LINK TO (use real URLs, pick 2):
-${linkList}`,
-    }],
-  });
+${linkList}
 
-  if (msg.stop_reason === 'refusal') die('The model declined to generate this post.');
-  const text = msg.content.find(b => b.type === 'text');
-  if (!text) die('The model returned no text block.');
-  return JSON.parse(text.text);
+OUTPUT — respond with ONLY a single JSON object and nothing else: no markdown code fences, no commentary before or after. It must have exactly these string keys: ${FIELDS.join(', ')}. "body" is the full markdown article; "imageQuery" is 2-4 plain words for the stock-photo cover search.`;
+}
+
+// Run one generation through the Claude Code CLI. `--output-format json` makes
+// stdout a single envelope object whose `result` field holds the model's text
+// (our JSON post); CLI logs go to stderr, so stdout stays clean to parse.
+async function generatePost(topic, existing) {
+  const args = [
+    '-p', buildUserPrompt(topic, existing),
+    '--model', MODEL,
+    '--system-prompt', SYSTEM_PROMPT,
+    '--output-format', 'json',
+  ];
+
+  let stdout;
+  try {
+    ({ stdout } = await execFileAsync(CLAUDE_BIN, args, {
+      env: process.env,                // CLAUDE_CODE_OAUTH_TOKEN authenticates the subscription
+      maxBuffer: 32 * 1024 * 1024,
+      timeout: 6 * 60_000,
+    }));
+  } catch (e) {
+    if (e.code === 'ENOENT') die('The `claude` CLI was not found. Install it (npm i -g @anthropic-ai/claude-code) or set CLAUDE_BIN.');
+    die('Claude Code CLI failed: ' + String(e.stderr || e.message).slice(0, 500));
+  }
+
+  let envelope;
+  try {
+    envelope = JSON.parse(stdout);
+  } catch {
+    die('Claude Code did not return a JSON envelope. First 300 chars of stdout:\n' + String(stdout).slice(0, 300));
+  }
+  if (envelope.is_error || envelope.type === 'error' || /error/.test(envelope.subtype || '')) {
+    die('Claude Code reported an error: ' + (envelope.result || envelope.subtype || 'unknown'));
+  }
+
+  const raw = typeof envelope.result === 'string' ? envelope.result : JSON.stringify(envelope.result);
+  const post = parsePostJson(raw);
+  const missing = FIELDS.filter(k => !post[k]);
+  if (missing.length) die('Generated post is missing fields: ' + missing.join(', '));
+  return post;
+}
+
+// Parse the model's post JSON, tolerating stray code fences or prose around it.
+function parsePostJson(text) {
+  let s = (text || '').trim();
+  const fenced = /```(?:json)?\s*([\s\S]*?)\s*```/i.exec(s);
+  if (fenced) s = fenced[1].trim();
+  if (s[0] !== '{') {
+    const a = s.indexOf('{'), b = s.lastIndexOf('}');
+    if (a !== -1 && b > a) s = s.slice(a, b + 1);
+  }
+  try {
+    return JSON.parse(s);
+  } catch (e) {
+    die('Model output was not valid JSON (' + e.message + '). First 400 chars:\n' + s.slice(0, 400));
+  }
 }
 
 /* ── cover image (Pexels) ───────────────────────────────────────────────── */

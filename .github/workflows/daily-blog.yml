@@ -23,14 +23,13 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Install deps
-        working-directory: automation
-        run: npm install --no-audit --no-fund
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
 
       - name: Generate and publish a post
         working-directory: automation
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
           SITE_URL: ${{ vars.SITE_URL }}
