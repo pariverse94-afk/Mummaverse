@@ -126,9 +126,15 @@ DO NOT add an app download / store / waitlist call-to-action in the body — the
 
 Return the fields requested. imageQuery: 2-4 plain words for a stock-photo search that would make a relevant, tasteful cover (e.g. "indian family kitchen", "mother laptop home") — no text, no logos.`;
 
-// Exact JSON keys the model must return. Enforced in the prompt (the CLI returns
-// free text) and re-checked after parsing.
+// Exact JSON keys the model must return. Passed to the CLI as --json-schema so
+// the output is constrained to valid, conforming JSON; also re-checked after parse.
 const FIELDS = ['title', 'slug', 'tag', 'excerpt', 'emoji', 'blobColor', 'imageQuery', 'body'];
+const SCHEMA = {
+  type: 'object',
+  additionalProperties: false,
+  properties: Object.fromEntries(FIELDS.map(k => [k, { type: 'string' }])),
+  required: FIELDS,
+};
 
 function buildUserPrompt(topic, existing) {
   const linkList = existing
@@ -168,6 +174,7 @@ async function generatePost(topic, existing) {
     '--model', MODEL,
     '--system-prompt', SYSTEM_PROMPT,
     '--output-format', 'json',
+    '--json-schema', JSON.stringify(SCHEMA),
   ];
 
   let stdout;

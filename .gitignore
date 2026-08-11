@@ -8,6 +8,12 @@
 **/.env
 !**/.env.example
 
+# Ad-hoc secret scratch files kept in the repo folder. NEVER commit these —
+# the repo root is served publicly by Cloudflare Pages.
+token_safekeep
+*token*
+*secret*
+
 # Cloudflare / build
 .wrangler/
 node_modules/

@@ -74,5 +74,14 @@ node --env-file=.env generate-post.js
 ```
 
 There are no npm dependencies to install for the script itself — it uses only
-Node built-ins, `fetch`, and the `claude` CLI. On Windows, if `claude` isn't
-found, set `CLAUDE_BIN` to the full path of the CLI (e.g. `claude.cmd`).
+Node built-ins, `fetch`, and the `claude` CLI.
+
+On **Windows**, Node can't spawn the `claude.cmd` shim (`spawn EINVAL`), so for
+local runs point `CLAUDE_BIN` at the native binary instead, e.g.:
+
+```
+set CLAUDE_BIN=<npm-prefix>\node_modules\@anthropic-ai\claude-code\bin\claude.exe
+```
+
+(`npm prefix -g` prints the prefix.) This is only for local testing — the GitHub
+Actions runner is Linux, where `claude` is a normal executable and works as-is.
