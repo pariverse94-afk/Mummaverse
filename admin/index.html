@@ -119,6 +119,7 @@ Normal paragraphs. **Bold**, *italic*, `code`, and [links](https://example.com).
 
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
         <button class="primary" id="save">Save post</button>
+        <button class="ghost" id="togglePublish">Publish</button>
         <button class="ghost" id="newPost">New post</button>
         <button class="danger" id="del" style="display:none;">Delete</button>
         <a id="viewPost" class="btn ghost" target="_blank" style="display:none; text-decoration:none;">Open ↗</a>
@@ -166,8 +167,6 @@ Normal paragraphs. **Bold**, *italic*, `code`, and [links](https://example.com).
       <div class="card">
         <label>Posts</label>
         <div id="list" style="margin-top:6px;"><p class="hint">Loading…</p></div>
-        <button class="ghost" id="seed" style="width:100%; margin-top:16px;">Seed the 3 homepage posts</button>
-        <div class="hint">Creates the three posts the homepage cards link to. Skips any that already exist.</div>
       </div>
     </div>
 
@@ -290,7 +289,7 @@ window.edit = async slug => {
     $('viewPost').href = '/blog/' + post.slug;
     resetImageField();
     if (post.hasImage) showImagePreview('/api/image/' + post.slug + '?t=' + Date.now());
-    syncSlug(); countExcerpt();
+    syncSlug(); countExcerpt(); syncPublishUI();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   } catch (e) { flash(e.message, 'err'); }
 };
@@ -304,7 +303,7 @@ $('newPost').onclick = () => {
   $('del').style.display = 'none';
   $('viewPost').style.display = 'none';
   resetImageField();
-  syncSlug(); countExcerpt();
+  syncSlug(); countExcerpt(); syncPublishUI();
 };
 
 async function save(allowOverwrite = false) {
@@ -334,7 +333,10 @@ async function save(allowOverwrite = false) {
     $('viewPost').href = '/blog/' + post.slug;
     resetImageField();
     if (post.hasImage) showImagePreview('/api/image/' + post.slug + '?t=' + Date.now());
-    flash(`Saved. Live at /blog/${post.slug}`);
+    syncPublishUI();
+    flash(post.published === false
+      ? 'Saved as a draft — hidden from visitors. Click Publish to go live.'
+      : `Published — live at /blog/${post.slug}`);
     loadList();
   } catch (err) {
     if (err.status === 409 && confirm(err.message + '\n\nOverwrite it?')) return save(true);
@@ -342,6 +344,17 @@ async function save(allowOverwrite = false) {
   } finally { $('save').disabled = false; }
 }
 $('save').onclick = () => save(false);
+
+/* Reflect the Status dropdown in the primary Publish/Unpublish button. */
+function syncPublishUI() {
+  $('togglePublish').textContent = $('published').value === 'true' ? 'Unpublish' : 'Publish';
+}
+$('published').addEventListener('change', syncPublishUI);
+$('togglePublish').onclick = () => {
+  $('published').value = $('published').value === 'true' ? 'false' : 'true';
+  syncPublishUI();
+  save(false);
+};
 
 $('del').onclick = async () => {
   if (!current || !confirm(`Delete "${current.title}"? This cannot be undone.`)) return;
@@ -351,114 +364,6 @@ $('del').onclick = async () => {
     $('newPost').click();
     loadList();
   } catch (e) { flash(e.message, 'err'); }
-};
-
-/* ── the three posts the homepage links to ── */
-$('seed').onclick = async () => {
-  if (!confirm('Create the three posts the homepage cards point at?')) return;
-  const seeds = [
-    { slug: "the-invisible-to-do-list-is-still-a-to-do-list", tag: "MENTAL LOAD", emoji: "🧠", blobColor: "#b5657f", date: "2026-06-28", mins: undefined,
-      title: "The invisible to-do list is still a to-do list",
-      excerpt: "Remembering is work. Why the \"manager of the house\" role burns mums out — and how to actually hand it over.",
-      body: `Ask most Indian families who does the chores and you'll get a fair-sounding answer. Someone washes, someone cooks, someone drops the kids to school. Ask who *remembers* that the chores need doing — who notices the school shoes are getting tight, who knows the tailor closes early on Thursdays, who tracks that the cook takes leave next week — and the room usually goes quiet, then one person answers.
-
-That's the mental load. It isn't a chore you can point to. It's the noticing, the planning, the anticipating, and the holding of a hundred small facts about a household in your head at once. And in most nuclear Indian homes, one person carries almost all of it — usually the mother, regardless of how many hours she also works outside the house.
-
-## Why it doesn't show up on any list
-
-Physical chores are visible. A sink full of dishes announces itself. A folded pile of laundry sits on the bed as proof of work done. The mental load leaves no such trace. Nobody sees the three seconds it takes to remember that Tuesday is uniform-inspection day, or the background calculation that runs constantly — *do we have enough dal, does beta need new shoes, has the diwali cleaning been booked, did papa's BP medicine get refilled.*
-
-Because it's invisible, it's also unpaid in the currency that matters most inside a family: acknowledgment. Doing the dishes gets a thank you. Remembering that the dishes needed to be done, deciding when, and making sure someone actually did them — that gets nothing, because nobody else saw it happen.
-
-> Escape isn't running away. It's reclaiming your time.
-
-## "I'll help" is not the same as sharing the load
-
-This is the trap almost every well-meaning household falls into. A husband who says "just tell me what to do" believes he's being generous. He isn't refusing to work — he's refusing to *manage*. He wants a task list handed to him, which means someone still has to build the task list, track what's been done, and notice when something's been missed. The doing moved. The owning didn't.
-
-Real sharing means someone else holds the whole thing in their head — decides what needs to happen, when, and checks that it happened — without being told to. That's a much bigger ask than "help with the dishes," and it's exactly the ask that actually reduces the load on the person who's been carrying it.
-
-## How to actually hand it over
-
-We've watched this go wrong in the same three ways over and over, so here's what tends to work instead.
-
-1. **Move the whole task, not the doing of it.** If laundry becomes someone else's job, it has to include noticing when the basket's full, not just running the machine when told to. Half-delegation just adds a reminder to your mental load instead of removing anything.
-2. **Make it visible.** A shared list — on the fridge, in an app, anywhere both people can see it — turns "why didn't you just know" into "the list says it's your week." This is the single biggest de-escalator in the households we've spoken to.
-3. **Let the standard slip at first, on purpose.** The fastest way to lose ground is to take a task back the first time it's done imperfectly. A badly folded shirt that stays badly folded teaches everyone, including you, that the handover is real.
-4. **Rotate, don't assign forever.** A fixed "his job / her job" split quietly recreates the same imbalance a few months later, because life changes and the original split doesn't. A task that moves keeps everyone capable of everything.
-
-None of this is about extracting gratitude or keeping score. It's about the difference between a household where one person is quietly exhausted and holding everything together, and one where the holding-together is actually shared. The first kind looks fine from the outside. It rarely feels fine from the inside.` },
-    { slug: "how-to-split-chores-without-starting-a-war", tag: "FAIR PLAY", emoji: "⚖️", blobColor: "#d97a34", date: "2026-06-14", mins: undefined,
-      title: "How to split chores without starting a war",
-      excerpt: "Rotation beats negotiation. A practical playbook for getting husbands, teens and 6-year-olds on the roster.",
-      body: `Every "let's talk about how we split chores" conversation starts the same way and ends the same way: two people who both feel they're already doing more than their share, neither one wrong, both frustrated, nothing actually resolved. Negotiation is the wrong tool for this problem. It relitigates the same argument every time something changes — a new baby, a new job, exam season — because the agreement was never written down anywhere except in two different memories.
-
-A rotation fixes the actual problem, which isn't *who does what* but *who decides who does what*. Once there's a roster, the question stops being "why is it always me" and becomes "what does this week's list say" — a much smaller, much less personal question.
-
-## Start with the list, not the people
-
-Before assigning anything, write down everything that actually happens in your house in a week. Most families underestimate this list by half, because the invisible parts don't make it on — noticing the sabzi has run out, remembering the school WhatsApp group has an announcement, restocking the first-aid box. Write those down too. A rotation that only covers dishes and laundry will still leave someone quietly carrying everything else.
-
-Group the list into rough categories — kitchen, cleaning, kids, admin/errands — and estimate how long each actually takes. This step alone surfaces a lot: the tasks that feel huge because they're annoying (folding laundry) are often shorter than the ones that feel small because they're routine (the daily lunchbox routine, done 300 times a year).
-
-## Rotate on a fixed cycle
-
-Once the list exists, put it on a cycle instead of assigning it permanently.
-
-- **Weekly works best for most families.** It's long enough that someone actually learns a task properly, short enough that nobody gets stuck with the bathroom forever.
-- **Give kids real jobs, sized to their age — not token ones.** A six-year-old can set the table every single day and take real pride in it. A twelve-year-old can run a load of laundry start to finish. "Helping mumma" isn't a job; a specific, owned task is.
-- **Let the roster be the authority, not the loudest voice in the kitchen.** When there's a disagreement about whose turn it is, the answer should come from the list, not from whoever argues more persuasively in the moment. This is what actually removes the emotional charge from the conversation.
-- **Review it monthly, not never and not weekly.** Life changes — someone starts a new job, someone has exams, someone's knee is bothering them. A rotation that never adjusts becomes as unfair as no rotation at all. One that's renegotiated every few days is exhausting in a different way.
-
-## What to do when someone "forgets"
-
-It will happen, and it's usually not defiance — it's that the system hasn't become a habit yet. Resist the urge to just do it yourself "because it's faster." That single decision, repeated, is how every rotation quietly dies and reverts to one person doing everything. A gentle, specific reminder ("the roster says bartan's yours tonight") reinforces the system instead of undermining it.
-
-> If the list decides, nobody has to be the villain.
-
-## The part nobody expects
-
-Most families tell us the biggest surprise isn't that chores get done more evenly — it's that the *arguments* mostly stop. Not because everyone suddenly agrees on what's fair, but because there's no longer a daily negotiation to have. The system had the argument once, when it was built. After that, it just runs.` },
-    { slug: "maid-nahi-aayi-is-a-family-emergency-not-a-mumma-emergency", tag: "REAL TALK", emoji: "🪣", blobColor: "#e8b878", date: "2026-06-02", mins: undefined,
-      title: "\"Maid nahi aayi\" is a family emergency, not a mumma emergency",
-      excerpt: "What happens in Indian nuclear homes when the support system takes a day off — and who should absorb it.",
-      body: `There's a specific kind of dread in the four words "didi aaj nahi aayi." Not because the work itself is impossible — most of it takes an hour, maybe two. It's dread because everyone in the house already knows, without a conversation happening, exactly whose day just changed. Everyone else's morning continues on schedule. One person's doesn't.
-
-That quiet, automatic redistribution is worth looking at directly, because it reveals something most families don't examine: who the shock absorber in the house actually is.
-
-## The shock absorber has a name
-
-Every household running on domestic help — which is most urban Indian nuclear families — has built a system with exactly one point of failure, and that point of failure isn't the didi. It's whoever picks up the slack when she doesn't come. In the overwhelming majority of homes we've talked to, that's the mother, by default, without anyone deciding it explicitly. It's not written anywhere. It's just what happens.
-
-This matters because a system where the slack always lands on the same person isn't really a shared household — it's a household that *looks* shared on a normal day, and reveals its real structure on an abnormal one. The days that don't go as planned are the ones that tell you the truth about how work is actually distributed.
-
-> If one person's day changes and nobody else's does, that was never a shared load — it just hadn't been tested yet.
-
-## Why "I'll just do it, it's faster" makes it worse
-
-The instinct on a no-help day is to just handle it, because arguing about who should mop the floor takes longer than mopping the floor. That instinct is completely understandable and it is exactly how this pattern becomes permanent. Every time the backup plan is "mumma absorbs it," the family learns — without anyone saying it out loud — that this is what backup plans are for. The pattern doesn't need to be decided twice. It only needs to happen a few times before it stops looking like an exception and starts looking like the arrangement.
-
-## Build the backup before you need it
-
-The fix isn't heroic effort on the bad days. It's a boring, unglamorous plan made on a good day, before anyone's stressed and running late.
-
-1. **Write a short list of what actually can't wait.** Not everything the didi does is urgent. Dishes can sit until evening. The floor can wait a day. Figure out the two or three things that genuinely can't slip — usually feeding people and getting kids out the door — and separate them from everything else.
-2. **Assign those two or three things to specific people, in advance.** Not "someone will figure it out" — an actual name against each task, decided when nobody's in a hurry. This is the whole trick. A decision made calmly on a Tuesday evening survives a chaotic Wednesday morning. A decision that has to be made in the moment usually doesn't.
-3. **Rotate who's on backup duty, the same way you'd rotate any other roster item.** If it's always the same person's contingency plan, it isn't a contingency plan — it's just an unofficial second job.
-4. **Treat a help-day cancellation as information, not just an inconvenience.** If it keeps landing hard on one person, that's a sign the household's baseline workload was never actually balanced — the paid help was quietly covering for an imbalance that was already there.
-
-None of this is about domestic help being unreliable, or about blaming anyone for a system that built itself gradually and invisibly. It's about noticing that a genuinely shared household doesn't just look shared on the easy days. It holds up on the hard ones too — because somebody thought about the hard ones in advance, instead of finding out who they'd fall on all over again.` },
-  ];
-
-  let made = 0, skipped = 0;
-  for (const s of seeds) {
-    try {
-      await api('/api/posts', { method: 'POST', body: JSON.stringify({ ...s, published: true }) });
-      made++;
-    } catch (e) { if (e.status === 409) skipped++; else { flash(e.message, 'err'); return; } }
-  }
-  flash(`Seeded ${made} post${made === 1 ? '' : 's'}${skipped ? `, skipped ${skipped} that already existed` : ''}.`);
-  loadList();
 };
 
 /* ── cover image ── */
