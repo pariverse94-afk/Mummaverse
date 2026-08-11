@@ -281,8 +281,11 @@ async function main() {
   console.log(topic ? `• Topic: ${topic.title}` : '• All planned topics used — asking the model for a fresh one.');
 
   const post = await generatePost(topic, existing);
-  const slug = uniqueSlug(post.slug || post.title, taken);
-  console.log(`• Generated: "${post.title}" (${post.body.split(/\s+/).length} words)`);
+  // For a planned topic, the slug IS the keyword target from the SEO plan — pin
+  // it rather than trusting the model's own slug, so the URL matches the plan and
+  // the topic reliably counts as "used" on the next run (fixes endless re-picks).
+  const slug = uniqueSlug(topic ? topic.slug : (post.slug || post.title), taken);
+  console.log(`• Generated: "${post.title}" (${post.body.split(/\s+/).length} words) -> /blog/${slug}`);
 
   const cover = await fetchCover(post.imageQuery);
   const body = cover ? post.body + cover.credit : post.body;
