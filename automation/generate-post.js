@@ -19,10 +19,8 @@
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-import { execFile } from 'node:child_process';
-import { promisify } from 'node:util';
+import { spawn } from 'node:child_process';
 
-const execFileAsync = promisify(execFile);
 const HERE = dirname(fileURLToPath(import.meta.url));
 
 const SITE_URL = (process.env.SITE_URL || 'https://mummaverse.in').replace(/\/$/, '');
@@ -165,9 +163,31 @@ ${linkList}
 OUTPUT — respond with ONLY a single JSON object and nothing else: no markdown code fences, no commentary before or after. It must have exactly these string keys: ${FIELDS.join(', ')}. "body" is the full markdown article; "imageQuery" is 2-4 plain words for the stock-photo cover search.`;
 }
 
+// Spawn the CLI with NO stdin, so it runs non-interactively (equivalent to
+// `< /dev/null`). Left attached, the CLI blocks a few seconds waiting on stdin
+// in CI. We capture stdout/stderr/exit code ourselves rather than throwing on a
+// non-zero exit, because the CLI can exit non-zero on benign warnings while
+// still having produced a perfectly good result envelope on stdout.
+function runClaude(args) {
+  return new Promise((resolve, reject) => {
+    const child = spawn(CLAUDE_BIN, args, {
+      env: process.env,                     // CLAUDE_CODE_OAUTH_TOKEN authenticates the subscription
+      stdio: ['ignore', 'pipe', 'pipe'],
+      windowsHide: true,
+    });
+    let stdout = '', stderr = '', done = false;
+    const finish = (fn, arg) => { if (!done) { done = true; clearTimeout(timer); fn(arg); } };
+    const timer = setTimeout(() => { child.kill('SIGKILL'); finish(reject, new Error('claude timed out after 6 minutes')); }, 6 * 60_000);
+    child.stdout.on('data', d => { stdout += d; });
+    child.stderr.on('data', d => { stderr += d; });
+    child.on('error', e => finish(reject, e));
+    child.on('close', code => finish(resolve, { code, stdout, stderr }));
+  });
+}
+
 // Run one generation through the Claude Code CLI. `--output-format json` makes
 // stdout a single envelope object whose `result` field holds the model's text
-// (our JSON post); CLI logs go to stderr, so stdout stays clean to parse.
+// (our JSON post, constrained by --json-schema).
 async function generatePost(topic, existing) {
   const args = [
     '-p', buildUserPrompt(topic, existing),
@@ -177,27 +197,25 @@ async function generatePost(topic, existing) {
     '--json-schema', JSON.stringify(SCHEMA),
   ];
 
-  let stdout;
+  let res;
   try {
-    ({ stdout } = await execFileAsync(CLAUDE_BIN, args, {
-      env: process.env,                // CLAUDE_CODE_OAUTH_TOKEN authenticates the subscription
-      maxBuffer: 32 * 1024 * 1024,
-      timeout: 6 * 60_000,
-    }));
+    res = await runClaude(args);
   } catch (e) {
     if (e.code === 'ENOENT') die('The `claude` CLI was not found. Install it (npm i -g @anthropic-ai/claude-code) or set CLAUDE_BIN.');
-    die('Claude Code CLI failed: ' + String(e.stderr || e.message).slice(0, 500));
+    die('Could not run Claude Code CLI: ' + e.message);
   }
 
-  let envelope;
-  try {
-    envelope = JSON.parse(stdout);
-  } catch {
-    die('Claude Code did not return a JSON envelope. First 300 chars of stdout:\n' + String(stdout).slice(0, 300));
+  let envelope = null;
+  try { envelope = JSON.parse(res.stdout); } catch { /* handled below */ }
+
+  if (!envelope) {
+    die(`Claude Code produced no JSON envelope (exit ${res.code}).\n` +
+        `--- stderr ---\n${res.stderr.slice(0, 800)}\n--- stdout ---\n${res.stdout.slice(0, 800)}`);
   }
   if (envelope.is_error || envelope.type === 'error' || /error/.test(envelope.subtype || '')) {
-    die('Claude Code reported an error: ' + (envelope.result || envelope.subtype || 'unknown'));
+    die('Claude Code reported an error: ' + (envelope.result || envelope.subtype || `exit ${res.code}`));
   }
+  // A non-zero exit alongside a valid success envelope is tolerated on purpose.
 
   const raw = typeof envelope.result === 'string' ? envelope.result : JSON.stringify(envelope.result);
   const post = parsePostJson(raw);
