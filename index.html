@@ -512,7 +512,7 @@ class Component extends DCLogic {
           emoji: p.emoji || '📝',
           blobColor: p.blobColor || '#d97a34',
           hasImage: !!p.hasImage,
-          imageUrl: '/api/image/' + p.slug,
+          imageUrl: '/api/image/' + p.slug + (p.updatedAt ? '?v=' + encodeURIComponent(p.updatedAt) : ''),
           cover: 'radial-gradient(ellipse 260px 160px at 40% 20%, ' + rgba(p.blobColor, 0.28) + ', transparent 70%), linear-gradient(160deg, #f7e9d7, #efdcc6)',
         }));
         this.setState({ livePosts });

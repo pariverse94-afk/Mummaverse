@@ -151,7 +151,15 @@ export function toMetadata(post) {
     blobColor: post.blobColor || '#d97a34',
     hasImage: !!post.hasImage,
     published: post.published !== false,
+    updatedAt: post.updatedAt || '',
   };
+}
+
+/* Cover-image URL, versioned by updatedAt so a replaced image busts browser and
+   edge caches the moment the post is saved (the bytes are cached for an hour). */
+export function imageUrl(post) {
+  const v = post.updatedAt || post.date || '';
+  return `/api/image/${encodeURIComponent(post.slug)}` + (v ? `?v=${encodeURIComponent(v)}` : '');
 }
 
 /* ── cover images ────────────────────────────────────────────────────────────
