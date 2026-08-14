@@ -178,6 +178,7 @@ const $ = id => document.getElementById(id);
 let current = null;          // the post being edited, or null for a new one
 let imageDataUrl = null;     // a freshly picked cover image, ready to upload
 let removeImageFlag = false; // set when the editor clears an existing image
+let listed = [];             // the posts currently shown in the side list
 
 /* Downscale in the browser so we never ship a 6 MB phone photo to KV. */
 function readAndCompress(file) {
@@ -255,6 +256,7 @@ $('logout').onclick = async () => {
 async function loadList() {
   try {
     const { posts } = await api('/api/posts');
+    listed = posts;
     $('list').innerHTML = posts.length ? posts.map(p => `
       <div class="post-row">
         <div style="min-width:0;">
@@ -264,10 +266,23 @@ async function loadList() {
         <div style="display:flex; gap:8px; align-items:center; flex:none;">
           <span class="tag ${p.published === false ? 'draft' : ''}">${p.published === false ? 'DRAFT' : 'LIVE'}</span>
           <button class="ghost" style="padding:6px 12px;" onclick="edit('${p.slug}')">Edit</button>
+          <button class="danger" style="padding:6px 12px;" onclick="deleteFromList('${p.slug}')">Delete</button>
         </div>
       </div>`).join('') : '<p class="hint">No posts yet.</p>';
   } catch (e) { $('list').innerHTML = '<p class="hint">Could not load posts.</p>'; }
 }
+
+/* Delete straight from the side list, without opening the post first. */
+window.deleteFromList = async slug => {
+  const p = listed.find(x => x.slug === slug);
+  if (!confirm(`Delete "${p ? p.title : slug}"? This cannot be undone.`)) return;
+  try {
+    await api('/api/posts/' + slug, { method: 'DELETE' });
+    flash('Deleted.');
+    if (current && current.slug === slug) $('newPost').click();
+    loadList();
+  } catch (e) { flash(e.message, 'err'); }
+};
 
 /* ── editor ── */
 window.edit = async slug => {
