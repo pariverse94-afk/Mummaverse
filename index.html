@@ -502,7 +502,9 @@ class Component extends DCLogic {
           const n = parseInt(h, 16);
           return 'rgba(' + ((n >> 16) & 255) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')';
         };
-        const livePosts = d.posts.slice(0, 3).map(p => ({
+        // /api/posts includes drafts when an editor is signed in; the public
+        // homepage must only ever show published posts (a draft links to a 404).
+        const livePosts = d.posts.filter(p => p.published !== false).slice(0, 3).map(p => ({
           tag: p.tag || 'NOTES',
           url: '/blog/' + p.slug,
           title: p.title || '',
