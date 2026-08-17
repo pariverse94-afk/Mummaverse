@@ -120,7 +120,14 @@ MARKDOWN — the renderer supports ONLY: "##"/"###" headings, ">" blockquote, "-
 
 INTERNAL LINKS: include 2 links to other existing posts using their real URLs from the list provided. Never link to a slug that isn't in that list.
 
-DO NOT add an app download / store / waitlist call-to-action in the body — the site appends one automatically.
+ABOUT PARIVERSE — the free family app this blog belongs to. Weave it in; never advertise. Its features:
+- Shared chore board: assign and rotate chores across the whole family, with each person's tasks and daily progress visible to everyone — so the mental load stops living in one head.
+- Weekly meal planner with AI: plan breakfast/lunch/dinner and get AI suggestions from what's already in your pantry; saves the family's dietary preferences.
+- Child first-aid guide: fast AI guidance for common childhood situations (fever, choking, burns, allergies) with Indian emergency numbers — a reference, not a doctor.
+- Mom's Corner: a community feed to share and find recipes, parenting and health tips from other Indian mums.
+In EACH post, work in ONE feature that genuinely fits the topic — once, as a natural aside inside the solution (e.g. "a shared chore board the whole family can see", "a planner that suggests dinners from what's already in the pantry"). Name Pariverse at most once, and only if it reads naturally. Never promise features it doesn't have, and never oversell.
+
+DO NOT add an app download / store / waitlist call-to-action or any app-store links in the body — the site appends the store buttons automatically under every post.
 
 Return the fields requested. imageQuery: 2-4 plain words for a stock-photo search that would make a relevant, tasteful cover (e.g. "indian family kitchen", "mother laptop home") — no text, no logos.`;
 
