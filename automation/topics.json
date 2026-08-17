@@ -70,5 +70,53 @@
     "tag": "FAIR PLAY",
     "emoji": "💼",
     "blobColor": "#8a6ac9"
+  },
+  {
+    "slug": "weekly-meal-planning-indian-families",
+    "title": "Weekly Meal Planning for Indian Families",
+    "primaryKeyword": "weekly meal planning for Indian families",
+    "tag": "MEALS",
+    "emoji": "🍲",
+    "blobColor": "#5a9e7a"
+  },
+  {
+    "slug": "what-to-cook-today-decision-fatigue",
+    "title": "What to Cook Today? Ending the Daily Dread",
+    "primaryKeyword": "deciding what to cook every day",
+    "tag": "MEALS",
+    "emoji": "🍛",
+    "blobColor": "#d98a4a"
+  },
+  {
+    "slug": "child-fever-at-night-what-to-do-india",
+    "title": "Child Has a Fever at Night? What to Do First",
+    "primaryKeyword": "what to do when child has fever at night",
+    "tag": "FIRST AID",
+    "emoji": "🌡️",
+    "blobColor": "#c9564b"
+  },
+  {
+    "slug": "home-first-aid-kit-checklist-india",
+    "title": "The Home First-Aid Kit Every Family Needs",
+    "primaryKeyword": "home first aid kit checklist for families",
+    "tag": "FIRST AID",
+    "emoji": "🩹",
+    "blobColor": "#4b86a8"
+  },
+  {
+    "slug": "mom-loneliness-nuclear-family-india",
+    "title": "The Quiet Loneliness of the Nuclear-Family Mom",
+    "primaryKeyword": "loneliness as a mother in a nuclear family",
+    "tag": "REAL TALK",
+    "emoji": "🫂",
+    "blobColor": "#8f6ac9"
+  },
+  {
+    "slug": "how-to-find-mom-friends-india",
+    "title": "How to Find Mom Friends in a New City",
+    "primaryKeyword": "how to find mom friends in India",
+    "tag": "COMMUNITY",
+    "emoji": "👭",
+    "blobColor": "#c96f9a"
   }
 ]
